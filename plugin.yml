@@ -1,0 +1,6 @@
+name: MoonLakeGUI
+main: com.minecraft.moonlake.gui.GUIPlugin
+version: 1.0
+author: Month_Light
+website: http://www.mcyszh.net
+depend: [MoonLake]
