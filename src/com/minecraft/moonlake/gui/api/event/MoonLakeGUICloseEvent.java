@@ -20,7 +20,7 @@ public class MoonLakeGUICloseEvent extends MoonLakeGUIEvent {
     }
 
     /**
-     * 获取打开此 GUI 对象的玩家
+     * 获取关闭此 GUI 对象的玩家
      *
      * @return 玩家
      */

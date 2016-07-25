@@ -72,13 +72,16 @@ public class InventoryListener implements Listener {
 
             event.setCancelled(true);
         }
-        MoonLakeGUIClickEvent mgce = new MoonLakeGUIClickEvent(gui, (Player)event.getWhoClicked());
+        MoonLakeGUIClickEvent mgce = new MoonLakeGUIClickEvent(gui, (Player)event.getWhoClicked(), null);
         Bukkit.getServer().getPluginManager().callEvent(mgce);
 
         GUIButton button = gui.getButton(event.getSlot());
 
         if(button == null) return;
         if(button.getExecute() == null) return;
+
+        MoonLakeGUIClickEvent mgce2 = new MoonLakeGUIClickEvent(gui, (Player)event.getWhoClicked(), button);
+        Bukkit.getServer().getPluginManager().callEvent(mgce2);
 
         button.getExecute().execute(gui, (Player)event.getWhoClicked(), button);
     }

@@ -1,6 +1,7 @@
 package com.minecraft.moonlake.gui.api.event;
 
 import com.minecraft.moonlake.gui.api.GUI;
+import com.minecraft.moonlake.gui.api.button.GUIButton;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
@@ -11,22 +12,34 @@ public class MoonLakeGUIClickEvent extends MoonLakeGUIEvent {
 
     private final static HandlerList handlers = new HandlerList();
     private Player player;
+    private GUIButton currentButton;
 
-    public MoonLakeGUIClickEvent(GUI gui, Player player) {
+    public MoonLakeGUIClickEvent(GUI gui, Player player, GUIButton currentButton) {
 
         super(gui);
 
         this.player = player;
+        this.currentButton = currentButton;
     }
 
     /**
-     * 获取打开此 GUI 对象的玩家
+     * 获取点击此 GUI 对象的玩家
      *
      * @return 玩家
      */
     public Player getPlayer() {
 
         return player;
+    }
+
+    /**
+     * 获取点击的 GUI 对象的按钮对象
+     *
+     * @return 按钮对象 非点击按钮则返回 null
+     */
+    public GUIButton getCurrentButton() {
+
+        return currentButton;
     }
 
     @Override
