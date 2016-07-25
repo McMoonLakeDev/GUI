@@ -63,8 +63,6 @@ public class InventoryListener implements Listener {
         if(event.getInventory() == null) return;
         if(event.getClickedInventory() == null) return;
 
-        getMain().log("检测到物品栏点击事件，检测是为 MoonLake GUI.");
-
         GUI gui = getMain().getManager().fromTitle(event.getClickedInventory());
 
         if(gui == null) return;
@@ -77,15 +75,12 @@ public class InventoryListener implements Listener {
         MoonLakeGUIClickEvent mgce = new MoonLakeGUIClickEvent(gui, (Player)event.getWhoClicked());
         Bukkit.getServer().getPluginManager().callEvent(mgce);
 
-        getMain().log("gui slot: " + event.getSlot());
-        getMain().log("gui raw slot: " + event.getRawSlot());
-
         GUIButton button = gui.getButton(event.getSlot());
 
         if(button == null) return;
         if(button.getExecute() == null) return;
 
-        button.getExecute().run(gui, (Player)event.getWhoClicked());
+        button.getExecute().execute(gui, (Player)event.getWhoClicked(), button);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

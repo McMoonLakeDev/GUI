@@ -13,6 +13,7 @@ public interface GUIButtonExecute {
      *
      * @param gui 点击的 GUI 对象
      * @param clicked 点击的玩家对象
+     * @param currentButton 点击的按钮对象
      */
-    void run(GUI gui, Player clicked);
+    void execute(GUI gui, Player clicked, GUIButton currentButton);
 }

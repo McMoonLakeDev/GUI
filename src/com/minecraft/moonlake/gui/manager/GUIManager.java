@@ -66,8 +66,6 @@ public final class GUIManager implements MoonLakeGUIManager {
         }
         GUI_MAP.put(gui.getName(), gui);
         GUI_TITLE_MAP.put(gui.getTitle(), gui.getName());
-
-        getMain().log("MoonLake GUI " + gui.getName() + " 成功被注册!!!");
     }
 
     /**

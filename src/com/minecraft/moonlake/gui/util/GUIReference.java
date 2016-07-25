@@ -93,6 +93,20 @@ public class GUIReference implements GUI {
     }
 
     /**
+     * 设置指定二维坐标为按钮对象
+     *
+     * @param x X 坐标
+     * @param y Y 坐标
+     * @return GUI 按钮对象
+     * @throws IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     */
+    @Override
+    public GUIButton setButton(int x, int y) {
+
+        return setButton(GUIUtil.getSlot(x, y));
+    }
+
+    /**
      * 设置指定索引为物品对象
      *
      * @param slot 索引
@@ -112,6 +126,21 @@ public class GUIReference implements GUI {
             throw new IllegalGUIButtonConflictException();
         }
         inventory.setItem(slot, icon);
+    }
+
+    /**
+     * 设置指定二维坐标为按钮对象
+     *
+     * @param x    X 坐标
+     * @param y    Y 坐标
+     * @param icon 图标
+     * @return GUI 按钮对象
+     * @throws IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     */
+    @Override
+    public GUIButton setButton(int x, int y, ItemStack icon) {
+
+        return setButton(GUIUtil.getSlot(x, y), icon);
     }
 
     /**
@@ -154,6 +183,22 @@ public class GUIReference implements GUI {
     }
 
     /**
+     * 设置指定二维坐标为按钮对象
+     *
+     * @param x       X 坐标
+     * @param y       Y 坐标
+     * @param icon    图标
+     * @param execute 执行
+     * @return GUI 按钮对象
+     * @throws IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     */
+    @Override
+    public GUIButton setButton(int x, int y, ItemStack icon, GUIButtonExecute execute) {
+
+        return setButton(GUIUtil.getSlot(x, y), icon, execute);
+    }
+
+    /**
      * 获取指定索引是否为按钮对象
      *
      * @param slot 索引
@@ -166,6 +211,19 @@ public class GUIReference implements GUI {
     }
 
     /**
+     * 获取指定二维坐标是否为按钮对象
+     *
+     * @param x X 坐标
+     * @param y Y 坐标
+     * @return
+     */
+    @Override
+    public boolean isButton(int x, int y) {
+
+        return isButton(GUIUtil.getSlot(x, y));
+    }
+
+    /**
      * 获取指定索引的按钮对象
      *
      * @param slot 索引
@@ -175,6 +233,19 @@ public class GUIReference implements GUI {
     public GUIButton getButton(int slot) {
 
         return isButton(slot) ? buttonMap.get(slot) : null;
+    }
+
+    /**
+     * 获取指定二维坐标的按钮对象
+     *
+     * @param x X 坐标
+     * @param y Y 坐标
+     * @return 按钮对象 异常或没有则返回 null
+     */
+    @Override
+    public GUIButton getButton(int x, int y) {
+
+        return getButton(GUIUtil.getSlot(x, y));
     }
 
     /**
@@ -193,6 +264,18 @@ public class GUIReference implements GUI {
     }
 
     /**
+     * 清除指定二维坐标的物品对象
+     *
+     * @param x X 坐标
+     * @param y Y 坐标
+     */
+    @Override
+    public void removeItem(int x, int y) {
+
+        removeItem(GUIUtil.getSlot(x, y));
+    }
+
+    /**
      * 清除指定索引的按钮对象
      *
      * @param slot 索引
@@ -208,6 +291,19 @@ public class GUIReference implements GUI {
         setItem(slot, new ItemBuilder(Material.AIR).build());
 
         return buttonMap.remove(slot);
+    }
+
+    /**
+     * 清除指定二维坐标的按钮对象
+     *
+     * @param x X 坐标
+     * @param y Y 坐标
+     * @return 按钮对象 异常没有则返回 null
+     */
+    @Override
+    public GUIButton removeButton(int x, int y) {
+
+        return removeButton(GUIUtil.getSlot(x, y));
     }
 
     /**

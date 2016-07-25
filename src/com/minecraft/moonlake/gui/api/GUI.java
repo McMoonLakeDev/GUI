@@ -42,6 +42,16 @@ public interface GUI {
     GUIButton setButton(int slot);
 
     /**
+     * 设置指定二维坐标为按钮对象
+     *
+     * @param x X 坐标
+     * @param y Y 坐标
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     * @return GUI 按钮对象
+     */
+    GUIButton setButton(int x, int y);
+
+    /**
      * 设置指定索引为物品对象
      *
      * @param slot 索引
@@ -50,6 +60,17 @@ public interface GUI {
      * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     void setItem(int slot, ItemStack icon);
+
+    /**
+     * 设置指定二维坐标为按钮对象
+     *
+     * @param x X 坐标
+     * @param y Y 坐标
+     * @param icon 图标
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     * @return GUI 按钮对象
+     */
+    GUIButton setButton(int x, int y, ItemStack icon);
 
     /**
      * 设置指定索引为按钮对象
@@ -73,12 +94,33 @@ public interface GUI {
     GUIButton setButton(int slot, ItemStack icon, GUIButtonExecute execute);
 
     /**
+     * 设置指定二维坐标为按钮对象
+     *
+     * @param x X 坐标
+     * @param y Y 坐标
+     * @param icon 图标
+     * @param execute 执行
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     * @return GUI 按钮对象
+     */
+    GUIButton setButton(int x, int y, ItemStack icon, GUIButtonExecute execute);
+
+    /**
      * 获取指定索引是否为按钮对象
      *
      * @param slot 索引
      * @return true 则为按钮 else 不是
      */
     boolean isButton(int slot);
+
+    /**
+     * 获取指定二维坐标是否为按钮对象
+     *
+     * @param x X 坐标
+     * @param y Y 坐标
+     * @return
+     */
+    boolean isButton(int x, int y);
 
     /**
      * 获取指定索引的按钮对象
@@ -89,11 +131,28 @@ public interface GUI {
     GUIButton getButton(int slot);
 
     /**
+     * 获取指定二维坐标的按钮对象
+     *
+     * @param x X 坐标
+     * @param y Y 坐标
+     * @return 按钮对象 异常或没有则返回 null
+     */
+    GUIButton getButton(int x, int y);
+
+    /**
      * 清除指定索引的物品对象
      *
      * @param slot 索引
      */
     void removeItem(int slot);
+
+    /**
+     * 清除指定二维坐标的物品对象
+     *
+     * @param x X 坐标
+     * @param y Y 坐标
+     */
+    void removeItem(int x, int y);
 
     /**
      * 清除指定索引的按钮对象
@@ -102,6 +161,15 @@ public interface GUI {
      * @return 按钮对象 异常没有则返回 null
      */
     GUIButton removeButton(int slot);
+
+    /**
+     * 清除指定二维坐标的按钮对象
+     *
+     * @param x X 坐标
+     * @param y Y 坐标
+     * @return 按钮对象 异常没有则返回 null
+     */
+    GUIButton removeButton(int x, int y);
 
     /**
      * 清除此 GUI 的所有物品对象
