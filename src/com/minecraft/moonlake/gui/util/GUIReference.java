@@ -395,6 +395,8 @@ public class GUIReference implements GUI {
     @Override
     public void clearAll() {
 
+        inventory.clear();
+        buttonMap.clear();
     }
 
     /**
