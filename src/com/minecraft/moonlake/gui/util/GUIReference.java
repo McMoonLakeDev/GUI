@@ -174,7 +174,7 @@ public class GUIReference implements GUI {
 
             throw new IllegalGUISlotOutBoundException();
         }
-        GUIButton button = new GUIButtonReference(execute, icon);
+        GUIButton button = new GUIButtonReference(this, execute, icon, slot);
 
         setItem(slot, icon);
 
@@ -197,6 +197,48 @@ public class GUIReference implements GUI {
     public GUIButton setButton(int x, int y, ItemStack icon, GUIButtonExecute execute) {
 
         return setButton(GUIUtil.getSlot(x, y), icon, execute);
+    }
+
+    /**
+     * 设置指定索引的按钮对象的图标
+     *
+     * @param slot 索引
+     * @param icon 图标
+     * @throws IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     */
+    @Override
+    public void setButtonIcon(int slot, ItemStack icon) {
+
+        if(slot + 1 > size) {
+
+            throw new IllegalGUISlotOutBoundException();
+        }
+        if(icon == null || icon.getType() == Material.AIR) {
+
+            return;
+        }
+        GUIButton button = getButton(slot);
+
+        if(button == null) {
+
+            return;
+        }
+        button.setIcon(icon);
+        inventory.setItem(slot, button.getIcon());
+    }
+
+    /**
+     * 设置指定二维坐标的按钮对象的图标
+     *
+     * @param x    X 坐标
+     * @param y    Y 坐标
+     * @param icon 图标
+     * @throws IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     */
+    @Override
+    public void setButtonIcon(int x, int y, ItemStack icon) {
+
+        setButtonIcon(GUIUtil.getSlot(x, y), icon);
     }
 
     /**

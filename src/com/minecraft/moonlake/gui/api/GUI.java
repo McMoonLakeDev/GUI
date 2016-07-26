@@ -106,6 +106,25 @@ public interface GUI {
     GUIButton setButton(int x, int y, ItemStack icon, GUIButtonExecute execute);
 
     /**
+     * 设置指定索引的按钮对象的图标
+     *
+     * @param slot 索引
+     * @param icon 图标
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     */
+    void setButtonIcon(int slot, ItemStack icon);
+
+    /**
+     * 设置指定二维坐标的按钮对象的图标
+     *
+     * @param x X 坐标
+     * @param y Y 坐标
+     * @param icon 图标
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     */
+    void setButtonIcon(int x, int y, ItemStack icon);
+
+    /**
      * 将此 GUI 添加按钮对象
      *
      * @param icon 图标
