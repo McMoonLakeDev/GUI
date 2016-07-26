@@ -8,7 +8,9 @@ import com.minecraft.moonlake.gui.util.GUIReference;
 import org.bukkit.inventory.Inventory;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by MoonLake on 2016/7/24.
@@ -90,6 +92,32 @@ public final class GUIManager implements MoonLakeGUIManager {
     }
 
     /**
+     * 卸载所有的 GUI 对象
+     *
+     * @return GUI 对象集合
+     */
+    @Override
+    public <T extends GUI> Set<T> unregisterAll() {
+
+        if(getSize() > 0) {
+
+            Set<T> guiSet = new HashSet<>();
+
+            for(String gui : GUI_MAP.keySet()) {
+
+                GUI gui1 = unregisterGUI(gui);
+
+                if(gui1 != null) {
+
+                    guiSet.add((T) gui1);
+                }
+            }
+            return guiSet;
+        }
+        return new HashSet<>();
+    }
+
+    /**
      * 获取指定名称的 GUI 对象
      *
      * @param gui GUI 对象
@@ -154,5 +182,27 @@ public final class GUIManager implements MoonLakeGUIManager {
     public GUI fromTitle(Inventory inventory) {
 
         return inventory != null ? fromTitle(inventory.getTitle()) : null;
+    }
+
+    /**
+     * 获取所有的 GUI 对象
+     *
+     * @return GUI 对象集合
+     */
+    @Override
+    public Set<GUI> getAllGUI() {
+
+        return getSize() > 0 ? new HashSet<>(GUI_MAP.values()) : new HashSet<>();
+    }
+
+    /**
+     * 获取注册的 GUI 数量大小
+     *
+     * @return 数量大小
+     */
+    @Override
+    public int getSize() {
+
+        return GUI_MAP.size();
     }
 }

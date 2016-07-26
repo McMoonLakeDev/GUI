@@ -2,6 +2,8 @@ package com.minecraft.moonlake.gui.api;
 
 import org.bukkit.inventory.Inventory;
 
+import java.util.Set;
+
 /**
  * Created by MoonLake on 2016/7/25.
  */
@@ -42,6 +44,13 @@ public interface MoonLakeGUIManager {
      * @return GUI 对象 没有则返回 null
      */
     <T extends GUI> GUI unregisterGUI(String name);
+
+    /**
+     * 卸载所有的 GUI 对象
+     *
+     * @return GUI 对象集合
+     */
+    <T extends GUI> Set<T> unregisterAll();
 
     /**
      * 获取指定名称的 GUI 对象
@@ -92,4 +101,18 @@ public interface MoonLakeGUIManager {
      * @return GUI 对象 没有则返回 null
      */
     GUI fromTitle(Inventory inventory);
+
+    /**
+     * 获取所有的 GUI 对象
+     *
+     * @return GUI 对象集合
+     */
+    Set<GUI> getAllGUI();
+
+    /**
+     * 获取注册的 GUI 数量大小
+     *
+     * @return 数量大小
+     */
+    int getSize();
 }

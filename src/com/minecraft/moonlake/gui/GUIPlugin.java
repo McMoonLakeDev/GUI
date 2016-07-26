@@ -44,6 +44,7 @@ public class GUIPlugin extends JavaPlugin implements MoonLakeGUI {
     @Override
     public void onDisable() {
 
+        manager.unregisterAll();
     }
 
     /**

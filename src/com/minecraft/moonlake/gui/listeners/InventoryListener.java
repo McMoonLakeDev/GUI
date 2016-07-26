@@ -36,6 +36,8 @@ public class InventoryListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onOpen(InventoryOpenEvent event) {
 
+        if(getMain().getManager().getSize() <= 0) return;
+
         GUI gui = getMain().getManager().fromTitle(event.getInventory());
 
         if(gui == null) return;
@@ -47,6 +49,8 @@ public class InventoryListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onClose(InventoryCloseEvent event) {
+
+        if(getMain().getManager().getSize() <= 0) return;
 
         GUI gui = getMain().getManager().fromTitle(event.getInventory());
 
@@ -62,6 +66,7 @@ public class InventoryListener implements Listener {
 
         if(event.getInventory() == null) return;
         if(event.getClickedInventory() == null) return;
+        if(getMain().getManager().getSize() <= 0) return;
 
         GUI gui = getMain().getManager().fromTitle(event.getClickedInventory());
 
@@ -92,6 +97,7 @@ public class InventoryListener implements Listener {
         if(event.getClickedInventory() == null) return;
         if(event.getClickedInventory().getType() != InventoryType.PLAYER) return;
         if(!(event.getWhoClicked() instanceof Player)) return;
+        if(getMain().getManager().getSize() <= 0) return;
 
         Player player = (Player)event.getWhoClicked();
 

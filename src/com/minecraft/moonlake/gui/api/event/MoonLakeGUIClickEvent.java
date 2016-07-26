@@ -42,6 +42,16 @@ public class MoonLakeGUIClickEvent extends MoonLakeGUIEvent {
         return currentButton;
     }
 
+    /**
+     * 获取点击的 GUI 对象是否为按钮
+     *
+     * @return true 则为按钮 else 不是
+     */
+    public boolean isButton() {
+
+        return currentButton != null;
+    }
+
     @Override
     public HandlerList getHandlers() {
 
