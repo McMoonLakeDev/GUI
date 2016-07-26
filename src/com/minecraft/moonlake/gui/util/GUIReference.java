@@ -6,6 +6,7 @@ import com.minecraft.moonlake.gui.api.GUI;
 import com.minecraft.moonlake.gui.api.button.GUIButton;
 import com.minecraft.moonlake.gui.api.button.GUIButtonExecute;
 import com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException;
+import com.minecraft.moonlake.gui.exception.IllegalGUIButtonOverflowException;
 import com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException;
 import com.minecraft.moonlake.gui.manager.GUIUtil;
 import com.minecraft.moonlake.gui.util.button.GUIButtonExecuteNone;
@@ -199,6 +200,55 @@ public class GUIReference implements GUI {
     }
 
     /**
+     * 将此 GUI 添加按钮对象
+     *
+     * @param icon 图标
+     * @return GUI 按钮对象 异常则返回 null
+     * @throws IllegalGUIButtonOverflowException 如果无法再添加按钮则抛出异常
+     */
+    @Override
+    public GUIButton addButton(ItemStack icon) {
+
+        return addButton(icon, new GUIButtonExecuteNone());
+    }
+
+    /**
+     * 将此 GUI 添加按钮对象
+     *
+     * @param icon    图标
+     * @param execute 执行
+     * @return GUI 按钮对象 异常则返回 null
+     * @throws IllegalGUIButtonOverflowException 如果无法再添加按钮则抛出异常
+     */
+    @Override
+    public GUIButton addButton(ItemStack icon, GUIButtonExecute execute) {
+
+        if(buttonMap.size() >= size) {
+
+            throw new IllegalGUIButtonOverflowException();
+        }
+        int slot = -1;
+
+        for(int i = 0; i < size; i++) {
+
+            ItemStack invIcon = inventory.getItem(i);
+
+            if(invIcon != null && invIcon.getType() != Material.AIR) {
+
+                continue;
+            }
+            slot = i;
+
+            break;
+        }
+        if(slot == -1) {
+
+            throw new IllegalGUIButtonOverflowException();
+        }
+        return setButton(slot, icon, execute);
+    }
+
+    /**
      * 获取指定索引是否为按钮对象
      *
      * @param slot 索引
@@ -215,7 +265,7 @@ public class GUIReference implements GUI {
      *
      * @param x X 坐标
      * @param y Y 坐标
-     * @return
+     * @return true 则为按钮 else 不是
      */
     @Override
     public boolean isButton(int x, int y) {
@@ -327,13 +377,24 @@ public class GUIReference implements GUI {
     @Override
     public void clearButtons() {
 
-        for(int i = 0; i < size; i++) {
+        if(buttonMap.size() > 0) {
 
-            if(isButton(i)) {
+            for (int i = 0; i < size; i++) {
 
-                removeButton(i);
+                if (isButton(i)) {
+
+                    removeButton(i);
+                }
             }
         }
+    }
+
+    /**
+     * 清除此 GUI 的所有物品和按钮对象
+     */
+    @Override
+    public void clearAll() {
+
     }
 
     /**

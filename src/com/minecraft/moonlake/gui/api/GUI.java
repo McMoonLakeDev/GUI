@@ -37,7 +37,7 @@ public interface GUI {
      *
      * @param slot 索引
      * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
-     * @return GUI 的按钮对象
+     * @return GUI 按钮对象
      */
     GUIButton setButton(int slot);
 
@@ -78,7 +78,7 @@ public interface GUI {
      * @param slot 索引
      * @param icon 图标
      * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
-     * @return GUI 的按钮对象
+     * @return GUI 按钮对象
      */
     GUIButton setButton(int slot, ItemStack icon);
 
@@ -89,7 +89,7 @@ public interface GUI {
      * @param icon 图标
      * @param execute 执行
      * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
-     * @return GUI 的按钮对象
+     * @return GUI 按钮对象
      */
     GUIButton setButton(int slot, ItemStack icon, GUIButtonExecute execute);
 
@@ -106,6 +106,25 @@ public interface GUI {
     GUIButton setButton(int x, int y, ItemStack icon, GUIButtonExecute execute);
 
     /**
+     * 将此 GUI 添加按钮对象
+     *
+     * @param icon 图标
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonOverflowException 如果无法再添加按钮则抛出异常
+     * @return GUI 按钮对象 异常则返回 null
+     */
+    GUIButton addButton(ItemStack icon);
+
+    /**
+     * 将此 GUI 添加按钮对象
+     *
+     * @param icon 图标
+     * @param execute 执行
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonOverflowException 如果无法再添加按钮则抛出异常
+     * @return GUI 按钮对象 异常则返回 null
+     */
+    GUIButton addButton(ItemStack icon, GUIButtonExecute execute);
+
+    /**
      * 获取指定索引是否为按钮对象
      *
      * @param slot 索引
@@ -118,7 +137,7 @@ public interface GUI {
      *
      * @param x X 坐标
      * @param y Y 坐标
-     * @return
+     * @return true 则为按钮 else 不是
      */
     boolean isButton(int x, int y);
 
@@ -180,6 +199,11 @@ public interface GUI {
      * 清除此 GUI 的所有按钮对象
      */
     void clearButtons();
+
+    /**
+     * 清除此 GUI 的所有物品和按钮对象
+     */
+    void clearAll();
 
     /**
      * 将此 GUI 对象打开给指定玩家
