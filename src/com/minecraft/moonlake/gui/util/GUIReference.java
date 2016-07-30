@@ -18,21 +18,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by MoonLake on 2016/7/24.
  */
 public class GUIReference implements GUI {
 
-    private String name;
-    private String title;
-    private int size;
-    private boolean allowMove;
-    private Map<Integer, GUIButton> buttonMap;
-
+    private final String name;
+    private final String title;
+    private final int size;
+    private final Map<Integer, GUIButton> buttonMap;
     private final Inventory inventory;
+
+    private boolean allowMove;
 
     public GUIReference(String name, String title, int size) {
 
@@ -84,8 +83,9 @@ public class GUIReference implements GUI {
      * 设置指定索引为按钮对象
      *
      * @param slot 索引
-     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
      * @return GUI 的按钮对象
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     @Override
     public GUIButton setButton(int slot) {
@@ -100,6 +100,7 @@ public class GUIReference implements GUI {
      * @param y Y 坐标
      * @return GUI 按钮对象
      * @throws IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     @Override
     public GUIButton setButton(int x, int y) {
@@ -113,7 +114,7 @@ public class GUIReference implements GUI {
      * @param slot 索引
      * @param icon 图标
      * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
-     *  @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     @Override
     public void setItem(int slot, ItemStack icon) {
@@ -137,6 +138,7 @@ public class GUIReference implements GUI {
      * @param icon 图标
      * @return GUI 按钮对象
      * @throws IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     @Override
     public GUIButton setButton(int x, int y, ItemStack icon) {
@@ -149,8 +151,9 @@ public class GUIReference implements GUI {
      *
      * @param slot 索引
      * @param icon 图标
-     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
      * @return GUI 的按钮对象
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     @Override
     public GUIButton setButton(int slot, ItemStack icon) {
@@ -164,8 +167,9 @@ public class GUIReference implements GUI {
      * @param slot    索引
      * @param icon    图标
      * @param execute 执行
-     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
      * @return GUI 的按钮对象
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     @Override
     public GUIButton setButton(int slot, ItemStack icon, GUIButtonExecute execute) {
@@ -173,6 +177,10 @@ public class GUIReference implements GUI {
         if(slot + 1 > size) {
 
             throw new IllegalGUISlotOutBoundException();
+        }
+        if(isButton(slot)) {
+
+            throw new IllegalGUIButtonConflictException();
         }
         GUIButton button = new GUIButtonReference(this, execute, icon, slot);
 
@@ -192,11 +200,76 @@ public class GUIReference implements GUI {
      * @param execute 执行
      * @return GUI 按钮对象
      * @throws IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     @Override
     public GUIButton setButton(int x, int y, ItemStack icon, GUIButtonExecute execute) {
 
         return setButton(GUIUtil.getSlot(x, y), icon, execute);
+    }
+
+    /**
+     * 设置指定索引集合为相同的按钮对象
+     *
+     * @param slots   索引集合
+     * @param icons   图标集合
+     * @param execute 执行
+     * @return GUI 按钮对象集合
+     * @throws IllegalArgumentException 如果索引或图标参数集合不正确则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton[] setSameButton(int[] slots, ItemStack[] icons, GUIButtonExecute execute) {
+
+        if(slots == null || slots.length <= 0 || icons == null) {
+
+            throw new IllegalArgumentException("The slot or icons argument exception.");
+        }
+        List<ItemStack> icons0 = new ArrayList<>(Arrays.asList(icons));
+
+        if(icons0.size() < slots.length) {
+
+            for(int i = icons0.size(); i < slots.length; i++) {
+
+                icons0.add(GUIUtil.DEFAULT_ICON);
+            }
+        }
+        GUIButton[] buttons = new GUIButton[slots.length];
+
+        for(int i = 0; i < slots.length; i++) {
+
+            buttons[i] = setButton(slots[i], icons0.get(i), execute);
+        }
+        return buttons;
+    }
+
+    /**
+     * 设置指定二维坐标集合为相同的按钮对象
+     *
+     * @param x       X 坐标集合
+     * @param y       Y 坐标集合
+     * @param icons   图标集合
+     * @param execute 执行
+     * @return GUI 按钮对象集合
+     * @throws IllegalArgumentException 如果二维坐标参数集合不正确则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton[] setSameButton(int[] x, int[] y, ItemStack[] icons, GUIButtonExecute execute) {
+
+        if(x == null || y == null || x.length != y.length) {
+
+            throw new IllegalArgumentException("The two dimension coordinate argument exception.");
+        }
+        int[] slots = new int[x.length];
+
+        for(int i = 0; i < slots.length; i++) {
+
+            slots[i] = GUIUtil.getSlot(x[i], y[i]);
+        }
+        return setSameButton(slots, icons, execute);
     }
 
     /**

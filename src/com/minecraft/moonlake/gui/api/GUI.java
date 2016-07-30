@@ -36,8 +36,9 @@ public interface GUI {
      * 设置指定索引为按钮对象
      *
      * @param slot 索引
-     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
      * @return GUI 按钮对象
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     GUIButton setButton(int slot);
 
@@ -46,8 +47,9 @@ public interface GUI {
      *
      * @param x X 坐标
      * @param y Y 坐标
-     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
      * @return GUI 按钮对象
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     GUIButton setButton(int x, int y);
 
@@ -67,8 +69,9 @@ public interface GUI {
      * @param x X 坐标
      * @param y Y 坐标
      * @param icon 图标
-     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
      * @return GUI 按钮对象
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     GUIButton setButton(int x, int y, ItemStack icon);
 
@@ -77,8 +80,9 @@ public interface GUI {
      *
      * @param slot 索引
      * @param icon 图标
-     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
      * @return GUI 按钮对象
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     GUIButton setButton(int slot, ItemStack icon);
 
@@ -88,8 +92,9 @@ public interface GUI {
      * @param slot 索引
      * @param icon 图标
      * @param execute 执行
-     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
      * @return GUI 按钮对象
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     GUIButton setButton(int slot, ItemStack icon, GUIButtonExecute execute);
 
@@ -100,10 +105,37 @@ public interface GUI {
      * @param y Y 坐标
      * @param icon 图标
      * @param execute 执行
-     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
      * @return GUI 按钮对象
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     GUIButton setButton(int x, int y, ItemStack icon, GUIButtonExecute execute);
+
+    /**
+     * 设置指定索引集合为相同的按钮对象
+     *
+     * @param slots 索引集合
+     * @param icons 图标集合
+     * @param execute 执行
+     * @return GUI 按钮对象集合
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    GUIButton[] setSameButton(int[] slots, ItemStack[] icons, GUIButtonExecute execute);
+
+    /**
+     * 设置指定二维坐标集合为相同的按钮对象
+     *
+     * @param x X 坐标集合
+     * @param y Y 坐标集合
+     * @param icons 图标集合
+     * @param execute 执行
+     * @return GUI 按钮对象集合
+     * @throws java.lang.IllegalArgumentException 如果二维坐标参数集合不正确则抛出异常
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    GUIButton[] setSameButton(int[] x, int[] y, ItemStack[] icons, GUIButtonExecute execute);
 
     /**
      * 设置指定索引的按钮对象的图标
