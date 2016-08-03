@@ -38,6 +38,7 @@ public class GUIReference implements GUI {
         // changed color text and check size
         title = Util.color(title);
         size = GUIUtil.checkSize(size);
+        size = size <= 6 ? size * 9 : size;
 
         this.name = name;
         this.size = size;
