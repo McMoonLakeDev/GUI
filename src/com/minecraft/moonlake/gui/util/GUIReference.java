@@ -35,15 +35,16 @@ public class GUIReference implements GUI {
 
     public GUIReference(String name, String title, int size) {
 
-        // changed color text
+        // changed color text and check size
         title = Util.color(title);
+        size = GUIUtil.checkSize(size);
 
         this.name = name;
         this.size = size;
         this.title = title;
         this.allowMove = false;
         this.buttonMap = new HashMap<>();
-        this.inventory = Bukkit.getServer().createInventory(null, GUIUtil.checkSize(size), title);
+        this.inventory = Bukkit.getServer().createInventory(null, size, title);
     }
 
     /**
