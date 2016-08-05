@@ -1,5 +1,8 @@
 package com.minecraft.moonlake.gui.api;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by MoonLake on 2016/8/5.
  */
@@ -62,6 +65,24 @@ public enum GUIClickType {
      */
     UNKNOWN,
     ;
+
+    private final static Map<String, GUIClickType> NAME_MAP;
+
+    static {
+
+        NAME_MAP = new HashMap<>();
+
+        for(GUIClickType guiClickType : values()) {
+
+            NAME_MAP.put(guiClickType.name(), guiClickType);
+        }
+    }
+
+    public static GUIClickType fromType(String type) {
+
+        GUIClickType guiClickType = NAME_MAP.get(type);
+        return guiClickType == null ? GUIClickType.UNKNOWN : guiClickType;
+    }
 
     /**
      * 获取此点击类型是否是键盘的按键被按下（数字键、丢弃键）

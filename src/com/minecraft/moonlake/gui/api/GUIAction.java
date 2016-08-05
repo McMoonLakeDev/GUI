@@ -1,5 +1,8 @@
 package com.minecraft.moonlake.gui.api;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by MoonLake on 2016/8/5.
  */
@@ -85,4 +88,22 @@ public enum GUIAction {
      */
     UNKNOWN,
     ;
+
+    private final static Map<String, GUIAction> NAME_MAP;
+
+    static {
+
+        NAME_MAP = new HashMap<>();
+
+        for(GUIAction guiAction : values()) {
+
+            NAME_MAP.put(guiAction.name(), guiAction);
+        }
+    }
+
+    public static GUIAction fromType(String type) {
+
+        GUIAction guiAction = NAME_MAP.get(type);
+        return guiAction == null ? GUIAction.UNKNOWN : guiAction;
+    }
 }

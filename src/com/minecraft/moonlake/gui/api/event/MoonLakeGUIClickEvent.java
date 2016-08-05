@@ -5,31 +5,33 @@ import com.minecraft.moonlake.gui.api.GUIAction;
 import com.minecraft.moonlake.gui.api.GUIClickType;
 import com.minecraft.moonlake.gui.api.button.GUIButton;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
 /**
  * Created by MoonLake on 2016/7/24.
  */
-public class MoonLakeGUIClickEvent extends MoonLakeGUIEvent {
+public class MoonLakeGUIClickEvent extends MoonLakeGUIEvent implements Cancellable {
 
     private final static HandlerList handlers = new HandlerList();
     private Player player;
-    private GUIButton currentButton;
+    private int slot;
     private GUIAction action;
     private GUIClickType clickType;
+    private boolean cancel;
 
-    public MoonLakeGUIClickEvent(GUI gui, Player player, GUIButton currentButton, GUIAction action, GUIClickType clickType) {
+    public MoonLakeGUIClickEvent(GUI gui, Player player, int slot, GUIAction action, GUIClickType clickType) {
 
         super(gui);
 
         this.player = player;
-        this.currentButton = currentButton;
+        this.slot = slot;
         this.action = action;
         this.clickType = clickType;
     }
 
     /**
-     * 获取点击此 GUI 对象的玩家
+     * 获取点击的 GUI 对象的玩家
      *
      * @return 玩家
      */
@@ -39,13 +41,23 @@ public class MoonLakeGUIClickEvent extends MoonLakeGUIEvent {
     }
 
     /**
+     * 获取点击的 GUI 对象的索引
+     *
+     * @return 索引
+     */
+    public int getSlot() {
+
+        return slot;
+    }
+
+    /**
      * 获取点击的 GUI 对象的按钮对象
      *
      * @return 按钮对象 非点击按钮则返回 null
      */
     public GUIButton getCurrentButton() {
 
-        return currentButton;
+        return getGUI().getButton(slot);
     }
 
     /**
@@ -55,7 +67,7 @@ public class MoonLakeGUIClickEvent extends MoonLakeGUIEvent {
      */
     public boolean isButton() {
 
-        return currentButton != null;
+        return getGUI().isButton(slot);
     }
 
     /**
@@ -137,5 +149,29 @@ public class MoonLakeGUIClickEvent extends MoonLakeGUIEvent {
     public static HandlerList getHandlerList() {
 
         return handlers;
+    }
+
+    /**
+     * Gets the cancellation state of this event. A cancelled event will not
+     * be executed in the server, but will still pass to other plugins
+     *
+     * @return true if this event is cancelled
+     */
+    @Override
+    public boolean isCancelled() {
+
+        return cancel;
+    }
+
+    /**
+     * Sets the cancellation state of this event. A cancelled event will not
+     * be executed in the server, but will still pass to other plugins.
+     *
+     * @param cancel true if you wish to cancel this event
+     */
+    @Override
+    public void setCancelled(boolean cancel) {
+
+        this.cancel = cancel;
     }
 }
