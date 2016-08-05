@@ -1,6 +1,8 @@
 package com.minecraft.moonlake.gui.listeners;
 
 import com.minecraft.moonlake.gui.api.GUI;
+import com.minecraft.moonlake.gui.api.GUIAction;
+import com.minecraft.moonlake.gui.api.GUIClickType;
 import com.minecraft.moonlake.gui.api.MoonLakeGUI;
 import com.minecraft.moonlake.gui.api.button.GUIButton;
 import com.minecraft.moonlake.gui.api.event.MoonLakeGUIClickEvent;
@@ -11,10 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.*;
 
 /**
  * Created by MoonLake on 2016/7/24.
@@ -38,7 +37,7 @@ public class InventoryListener implements Listener {
 
         if(getMain().getManager().getSize() <= 0) return;
 
-        GUI gui = getMain().getManager().fromTitle(event.getInventory());
+        GUI gui = getMain().getManager().fromInventory(event.getInventory());
 
         if(gui == null) return;
         if(!(event.getPlayer() instanceof Player)) return;
@@ -52,7 +51,7 @@ public class InventoryListener implements Listener {
 
         if(getMain().getManager().getSize() <= 0) return;
 
-        GUI gui = getMain().getManager().fromTitle(event.getInventory());
+        GUI gui = getMain().getManager().fromInventory(event.getInventory());
 
         if(gui == null) return;
         if(!(event.getPlayer() instanceof Player)) return;
@@ -68,16 +67,21 @@ public class InventoryListener implements Listener {
         if(event.getClickedInventory() == null) return;
         if(getMain().getManager().getSize() <= 0) return;
 
-        GUI gui = getMain().getManager().fromTitle(event.getClickedInventory());
+        GUI gui = getMain().getManager().fromInventory(event.getClickedInventory());
 
         if(gui == null) return;
         if(!(event.getWhoClicked() instanceof Player)) return;
+
+        Player player = (Player) event.getWhoClicked();
 
         if(!gui.isAllowMove()) {
 
             event.setCancelled(true);
         }
-        MoonLakeGUIClickEvent mgce = new MoonLakeGUIClickEvent(gui, (Player)event.getWhoClicked(), null);
+        GUIAction guiAction = GUIAction.valueOf(event.getAction().name());
+        GUIClickType guiClickType = GUIClickType.valueOf(event.getAction().name());
+
+        MoonLakeGUIClickEvent mgce = new MoonLakeGUIClickEvent(gui, player, null, guiAction, guiClickType);
         Bukkit.getServer().getPluginManager().callEvent(mgce);
 
         GUIButton button = gui.getButton(event.getSlot());
@@ -85,10 +89,10 @@ public class InventoryListener implements Listener {
         if(button == null) return;
         if(button.getExecute() == null) return;
 
-        MoonLakeGUIClickEvent mgce2 = new MoonLakeGUIClickEvent(gui, (Player)event.getWhoClicked(), button);
+        MoonLakeGUIClickEvent mgce2 = new MoonLakeGUIClickEvent(gui, player, button, guiAction, guiClickType);
         Bukkit.getServer().getPluginManager().callEvent(mgce2);
 
-        button.getExecute().execute(gui, (Player)event.getWhoClicked(), button);
+        button.getExecute().execute(gui, player, button);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -104,7 +108,7 @@ public class InventoryListener implements Listener {
         if(player.getOpenInventory() == null) return;
         if(player.getOpenInventory().getTopInventory() == null) return;
 
-        GUI gui = getMain().getManager().fromTitle(player.getOpenInventory().getTopInventory());
+        GUI gui = getMain().getManager().fromInventory(player.getOpenInventory().getTopInventory());
 
         if(gui != null) {
 

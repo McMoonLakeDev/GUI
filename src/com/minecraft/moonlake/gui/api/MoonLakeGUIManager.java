@@ -47,10 +47,8 @@ public interface MoonLakeGUIManager {
 
     /**
      * 卸载所有的 GUI 对象
-     *
-     * @return GUI 对象集合
      */
-    <T extends GUI> Set<T> unregisterAll();
+    void unregisterAll();
 
     /**
      * 获取指定名称的 GUI 对象
@@ -100,7 +98,7 @@ public interface MoonLakeGUIManager {
      * @param inventory 物品栏
      * @return GUI 对象 没有则返回 null
      */
-    GUI fromTitle(Inventory inventory);
+    GUI fromInventory(Inventory inventory);
 
     /**
      * 获取所有的 GUI 对象

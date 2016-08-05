@@ -93,28 +93,15 @@ public final class GUIManager implements MoonLakeGUIManager {
 
     /**
      * 卸载所有的 GUI 对象
-     *
-     * @return GUI 对象集合
      */
     @Override
-    public <T extends GUI> Set<T> unregisterAll() {
+    public void unregisterAll() {
 
         if(getSize() > 0) {
 
-            Set<T> guiSet = new HashSet<>();
-
-            for(String gui : GUI_MAP.keySet()) {
-
-                GUI gui1 = unregisterGUI(gui);
-
-                if(gui1 != null) {
-
-                    guiSet.add((T) gui1);
-                }
-            }
-            return guiSet;
+            GUI_MAP.clear();
+            GUI_TITLE_MAP.clear();
         }
-        return new HashSet<>();
     }
 
     /**
@@ -179,7 +166,8 @@ public final class GUIManager implements MoonLakeGUIManager {
      * @param inventory 物品栏
      * @return GUI 对象 没有则返回 null
      */
-    public GUI fromTitle(Inventory inventory) {
+    @Override
+    public GUI fromInventory(Inventory inventory) {
 
         return inventory != null ? fromTitle(inventory.getTitle()) : null;
     }

@@ -1,6 +1,8 @@
 package com.minecraft.moonlake.gui.api.event;
 
 import com.minecraft.moonlake.gui.api.GUI;
+import com.minecraft.moonlake.gui.api.GUIAction;
+import com.minecraft.moonlake.gui.api.GUIClickType;
 import com.minecraft.moonlake.gui.api.button.GUIButton;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -13,13 +15,17 @@ public class MoonLakeGUIClickEvent extends MoonLakeGUIEvent {
     private final static HandlerList handlers = new HandlerList();
     private Player player;
     private GUIButton currentButton;
+    private GUIAction action;
+    private GUIClickType clickType;
 
-    public MoonLakeGUIClickEvent(GUI gui, Player player, GUIButton currentButton) {
+    public MoonLakeGUIClickEvent(GUI gui, Player player, GUIButton currentButton, GUIAction action, GUIClickType clickType) {
 
         super(gui);
 
         this.player = player;
         this.currentButton = currentButton;
+        this.action = action;
+        this.clickType = clickType;
     }
 
     /**
@@ -50,6 +56,76 @@ public class MoonLakeGUIClickEvent extends MoonLakeGUIEvent {
     public boolean isButton() {
 
         return currentButton != null;
+    }
+
+    /**
+     * 获取点击的 GUI 对象的交互类型
+     *
+     * @return 交互类型
+     */
+    public GUIAction getAction() {
+
+        return action;
+    }
+
+    /**
+     * 获取点击的 GUI 对象的点击类型
+     *
+     * @return 点击类型
+     */
+    public GUIClickType getClickType() {
+
+        return clickType;
+    }
+
+    /**
+     * 获取此点击类型是否是键盘的按键被按下（数字键、丢弃键）
+     *
+     * @return true 则是键盘的按键被按下
+     */
+    public boolean isKeyboardClick() {
+
+        return clickType != null && clickType.isKeyboardClick();
+    }
+
+    /**
+     * 获取此点击类型是否是创造模式物品栏的点击行为（中键、CREATIVE）
+     *
+     * @return true 则是创造模式物品栏的点击行为
+     */
+    public boolean isCreativeAction() {
+        // Why use middle click?
+        return clickType != null && clickType.isCreativeAction();
+    }
+
+    /**
+     * 获取此点击类型是否是右键点击（右键、Shift 键 + 右键）
+     *
+     * @return true 则是右键点击
+     */
+    public boolean isRightClick() {
+
+        return clickType != null && clickType.isRightClick();
+    }
+
+    /**
+     * 获取此点击类型是否是左（或主）键点击（左（或主）键、Shift 键 + 左（或主）键）
+     *
+     * @return true 则是左（或主）键点击
+     */
+    public boolean isLeftClick() {
+
+        return clickType != null && clickType.isLeftClick();
+    }
+
+    /**
+     * 获取此点击类型是否是 Shift 键点击（Shift 键 + 左（或主）键、Shift 键 + 右键、Ctrl 键 + 丢弃键（默认 Q 键））
+     *
+     * @return true 则是 Shift 键点击
+     */
+    public boolean isShiftClick() {
+
+        return clickType != null && clickType.isShiftClick();
     }
 
     @Override
