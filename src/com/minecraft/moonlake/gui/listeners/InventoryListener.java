@@ -85,10 +85,13 @@ public class InventoryListener implements Listener {
             event.setCancelled(true);
             event.setResult(Event.Result.DENY);
         }
-        if(gui.isAllowMove() && !guiClickType.isLeftOrRightClick()) {
+        if(gui.isAllowMove()) {
 
-            event.setCancelled(true);
-            event.setResult(Event.Result.DENY);
+            if(button != null || !guiClickType.isLeftOrRightClick()) {
+
+                event.setCancelled(true);
+                event.setResult(Event.Result.DENY);
+            }
         }
         if(button == null) return;
         if(button.getExecute() == null) return;

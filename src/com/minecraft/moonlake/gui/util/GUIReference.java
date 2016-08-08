@@ -247,6 +247,32 @@ public class GUIReference implements GUI {
     }
 
     /**
+     * 设置指定索引集合为相同的按钮对象
+     *
+     * @param slots   索引集合
+     * @param icon    图标
+     * @param execute 执行
+     * @return GUI 按钮对象集合
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton[] setSameButton(int[] slots, ItemStack icon, GUIButtonExecute execute) {
+
+        if(slots == null || slots.length <= 0 || icon == null) {
+
+            throw new IllegalArgumentException("The slot or icons argument exception.");
+        }
+        GUIButton[] buttons = new GUIButton[slots.length];
+
+        for(int i = 0; i < slots.length; i++) {
+
+            buttons[i] = setButton(slots[i], icon, execute);
+        }
+        return buttons;
+    }
+
+    /**
      * 设置指定二维坐标集合为相同的按钮对象
      *
      * @param x       X 坐标集合
@@ -272,6 +298,34 @@ public class GUIReference implements GUI {
             slots[i] = GUIUtil.getSlot(x[i], y[i]);
         }
         return setSameButton(slots, icons, execute);
+    }
+
+    /**
+     * 设置指定二维坐标集合为相同的按钮对象
+     *
+     * @param x       X 坐标集合
+     * @param y       Y 坐标集合
+     * @param icon    图标
+     * @param execute 执行
+     * @return GUI 按钮对象集合
+     * @throws IllegalArgumentException          如果二维坐标参数集合不正确则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton[] setSameButton(int[] x, int[] y, ItemStack icon, GUIButtonExecute execute) {
+
+        if(x == null || y == null || x.length != y.length) {
+
+            throw new IllegalArgumentException("The two dimension coordinate argument exception.");
+        }
+        int[] slots = new int[x.length];
+
+        for(int i = 0; i < slots.length; i++) {
+
+            slots[i] = GUIUtil.getSlot(x[i], y[i]);
+        }
+        return setSameButton(slots, icon, execute);
     }
 
     /**
@@ -430,6 +484,31 @@ public class GUIReference implements GUI {
             guiButtonSet.add(guiButton);
         }
         return guiButtonSet.size() > 0 ? guiButtonSet : null;
+    }
+
+    /**
+     * 获取此 GUI 指定索引的物品栈对象
+     *
+     * @param slot 索引
+     * @return 物品栈对象 没有则返回 null
+     */
+    @Override
+    public ItemStack getItem(int slot) {
+
+        return inventory.getItem(slot);
+    }
+
+    /**
+     * 获取此 GUI 指定二维坐标的物品栈对象
+     *
+     * @param x X 坐标
+     * @param y Y 坐标
+     * @return 物品栈对象 没有则返回 null
+     */
+    @Override
+    public ItemStack getItem(int x, int y) {
+
+        return inventory.getItem(GUIUtil.getSlot(x, y));
     }
 
     /**
