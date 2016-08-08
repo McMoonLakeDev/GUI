@@ -10,6 +10,7 @@ import com.minecraft.moonlake.gui.api.event.MoonLakeGUICloseEvent;
 import com.minecraft.moonlake.gui.api.event.MoonLakeGUIOpenEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -65,6 +66,7 @@ public class InventoryListener implements Listener {
 
         if(event.getInventory() == null) return;
         if(event.getClickedInventory() == null) return;
+        if(event.getClickedInventory().getType() != InventoryType.CHEST) return;
         if(getMain().getManager().getSize() <= 0) return;
 
         GUI gui = getMain().getManager().fromInventory(event.getClickedInventory());
@@ -74,14 +76,20 @@ public class InventoryListener implements Listener {
 
         Player player = (Player) event.getWhoClicked();
 
-        if(!gui.isAllowMove()) {
-
-            event.setCancelled(true);
-        }
         GUIAction guiAction = GUIAction.fromType(event.getAction().name());
         GUIClickType guiClickType = GUIClickType.fromType(event.getClick().name());
         GUIButton button = gui.getButton(event.getSlot());
 
+        if(!gui.isAllowMove()) {
+
+            event.setCancelled(true);
+            event.setResult(Event.Result.DENY);
+        }
+        if(gui.isAllowMove() && !guiClickType.isLeftOrRightClick()) {
+
+            event.setCancelled(true);
+            event.setResult(Event.Result.DENY);
+        }
         if(button == null) return;
         if(button.getExecute() == null) return;
 
@@ -106,13 +114,21 @@ public class InventoryListener implements Listener {
 
         if(player.getOpenInventory() == null) return;
         if(player.getOpenInventory().getTopInventory() == null) return;
+        if(player.getOpenInventory().getTopInventory().getType() != InventoryType.CHEST) return;
 
         GUI gui = getMain().getManager().fromInventory(player.getOpenInventory().getTopInventory());
 
         if(gui != null) {
 
+            if(gui.isAllowMove()) {
+
+                if(event.getClick() == ClickType.LEFT || event.getClick() == ClickType.RIGHT) {
+
+                    return;
+                }
+            }
             event.setCancelled(true);
-            player.updateInventory();
+            event.setResult(Event.Result.DENY);
         }
     }
 }

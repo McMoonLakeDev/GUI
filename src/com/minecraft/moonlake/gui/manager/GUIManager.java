@@ -19,13 +19,11 @@ public final class GUIManager implements MoonLakeGUIManager {
 
     private final MoonLakeGUI main;
     private final Map<String, GUI> GUI_MAP;
-    private final Map<String, String> GUI_TITLE_MAP;
 
     public GUIManager(MoonLakeGUI main) {
 
         this.main = main;
         this.GUI_MAP = new HashMap<>();
-        this.GUI_TITLE_MAP = new HashMap<>();
     }
 
     /**
@@ -67,7 +65,6 @@ public final class GUIManager implements MoonLakeGUIManager {
             throw new IllegalGUIAlreadyExistsException();
         }
         GUI_MAP.put(gui.getName(), gui);
-        GUI_TITLE_MAP.put(gui.getTitle(), gui.getName());
     }
 
     /**
@@ -86,7 +83,6 @@ public final class GUIManager implements MoonLakeGUIManager {
             return null;
         }
         GUI_MAP.remove(gui.getName());
-        GUI_TITLE_MAP.remove(gui.getTitle());
 
         return gui;
     }
@@ -100,7 +96,6 @@ public final class GUIManager implements MoonLakeGUIManager {
         if(getSize() > 0) {
 
             GUI_MAP.clear();
-            GUI_TITLE_MAP.clear();
         }
     }
 
@@ -150,17 +145,6 @@ public final class GUIManager implements MoonLakeGUIManager {
     }
 
     /**
-     * 获取 GUI 对象从物品栏标题
-     *
-     * @param title 标题
-     * @return GUI 对象 没有则返回 null
-     */
-    public GUI fromTitle(String title) {
-
-        return GUI_TITLE_MAP.containsKey(title) ? getGUI(GUI_TITLE_MAP.get(title)) : null;
-    }
-
-    /**
      * 获取 GUI 对象从物品栏
      *
      * @param inventory 物品栏
@@ -169,7 +153,21 @@ public final class GUIManager implements MoonLakeGUIManager {
     @Override
     public GUI fromInventory(Inventory inventory) {
 
-        return inventory != null ? fromTitle(inventory.getTitle()) : null;
+        if(inventory == null) {
+
+            return null;
+        }
+        if(getSize() > 0) {
+
+            for(GUI gui : getAllGUI()) {
+
+                if(gui.equals(inventory)) {
+
+                    return gui;
+                }
+            }
+        }
+        return null;
     }
 
     /**

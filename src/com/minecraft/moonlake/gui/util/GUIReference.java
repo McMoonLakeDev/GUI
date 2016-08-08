@@ -416,6 +416,23 @@ public class GUIReference implements GUI {
     }
 
     /**
+     * 获取此 GUI 对象的按钮集合
+     *
+     * @return 按钮集合 没有则返回 null
+     */
+    @Override
+    public Set<GUIButton> getButtons() {
+
+        Set<GUIButton> guiButtonSet = new HashSet<>();
+
+        for(GUIButton guiButton : buttonMap.values()) {
+
+            guiButtonSet.add(guiButton);
+        }
+        return guiButtonSet.size() > 0 ? guiButtonSet : null;
+    }
+
+    /**
      * 清除指定索引的物品对象
      *
      * @param slot 索引
@@ -558,5 +575,31 @@ public class GUIReference implements GUI {
     public void setAllowMove(boolean flag) {
 
         this.allowMove = flag;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return getName().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if(obj == null) {
+
+            return false;
+        }
+        if(obj instanceof GUI) {
+
+            GUI gui = (GUI) obj;
+            return gui.getName().equals(getName());
+        }
+        else if(obj instanceof Inventory) {
+
+            Inventory guiBase = (Inventory) obj;
+            return guiBase.equals(inventory);
+        }
+        return false;
     }
 }

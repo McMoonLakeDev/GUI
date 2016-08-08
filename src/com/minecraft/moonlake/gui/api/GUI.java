@@ -6,6 +6,8 @@ import com.minecraft.moonlake.gui.api.button.GUIButtonExecute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Set;
+
 /**
  * Created by MoonLake on 2016/7/24.
  */
@@ -210,6 +212,13 @@ public interface GUI {
     GUIButton getButton(int x, int y);
 
     /**
+     * 获取此 GUI 对象的按钮集合
+     *
+     * @return 按钮集合 没有则返回 null
+     */
+    Set<GUIButton> getButtons();
+
+    /**
      * 清除指定索引的物品对象
      *
      * @param slot 索引
@@ -283,4 +292,12 @@ public interface GUI {
      * @param flag 是否允许
      */
     void setAllowMove(boolean flag);
+
+    /**
+     * 获取此 GUI 对象是否符合目标对象
+     *
+     * @param obj 对象
+     * @return true 则符合
+     */
+    boolean equals(Object obj);
 }

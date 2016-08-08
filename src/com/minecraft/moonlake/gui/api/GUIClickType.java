@@ -81,7 +81,7 @@ public enum GUIClickType {
     public static GUIClickType fromType(String type) {
 
         GUIClickType guiClickType = NAME_MAP.get(type);
-        return guiClickType == null ? GUIClickType.UNKNOWN : guiClickType;
+        return guiClickType == null ? UNKNOWN : guiClickType;
     }
 
     /**
@@ -91,7 +91,7 @@ public enum GUIClickType {
      */
     public boolean isKeyboardClick() {
 
-        return (this == GUIClickType.NUMBER_KEY) || (this == GUIClickType.DROP) || (this == GUIClickType.CONTROL_DROP);
+        return (this == NUMBER_KEY) || (this == DROP) || (this == CONTROL_DROP);
     }
 
     /**
@@ -101,7 +101,7 @@ public enum GUIClickType {
      */
     public boolean isCreativeAction() {
         // Why use middle click?
-        return (this == GUIClickType.MIDDLE) || (this == GUIClickType.CREATIVE);
+        return (this == MIDDLE) || (this == CREATIVE);
     }
 
     /**
@@ -111,7 +111,7 @@ public enum GUIClickType {
      */
     public boolean isRightClick() {
 
-        return (this == GUIClickType.RIGHT) || (this == GUIClickType.SHIFT_RIGHT);
+        return (this == RIGHT) || (this == SHIFT_RIGHT);
     }
 
     /**
@@ -121,7 +121,7 @@ public enum GUIClickType {
      */
     public boolean isLeftClick() {
 
-        return (this == GUIClickType.LEFT) || (this == GUIClickType.SHIFT_LEFT) || (this == GUIClickType.DOUBLE_CLICK) || (this == GUIClickType.CREATIVE);
+        return (this == LEFT) || (this == SHIFT_LEFT) || (this == DOUBLE_CLICK) || (this == CREATIVE);
     }
 
     /**
@@ -131,6 +131,16 @@ public enum GUIClickType {
      */
     public boolean isShiftClick() {
 
-        return (this == GUIClickType.SHIFT_LEFT) || (this == GUIClickType.SHIFT_RIGHT) || (this == GUIClickType.CONTROL_DROP);
+        return (this == SHIFT_LEFT) || (this == SHIFT_RIGHT) || (this == CONTROL_DROP);
+    }
+
+    /**
+     * 获取此点击类型是否为 左（或主）键 或 右键点击
+     *
+     * @return true 则不是
+     */
+    public boolean isLeftOrRightClick() {
+
+        return (this == LEFT) || (this == RIGHT);
     }
 }

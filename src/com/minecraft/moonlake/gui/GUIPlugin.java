@@ -1,12 +1,11 @@
 package com.minecraft.moonlake.gui;
 
 import com.minecraft.moonlake.MoonLakePlugin;
+import com.minecraft.moonlake.api.MLogger;
 import com.minecraft.moonlake.gui.api.MoonLakeGUI;
 import com.minecraft.moonlake.gui.api.MoonLakeGUIManager;
 import com.minecraft.moonlake.gui.listeners.InventoryListener;
 import com.minecraft.moonlake.gui.manager.GUIManager;
-import com.minecraft.moonlake.util.Util;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,12 +15,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class GUIPlugin extends JavaPlugin implements MoonLakeGUI {
 
     private MoonLakeGUIManager manager;
-    private final ConsoleCommandSender console;
+    private final MLogger mLogger;
     private static MoonLakeGUI MAIN;
 
     public GUIPlugin() {
 
-        this.console = this.getServer().getConsoleSender();
+        this.mLogger = new MLogger.Wrapped("MoonLakeGUI");
     }
 
     @Override
@@ -31,14 +30,14 @@ public class GUIPlugin extends JavaPlugin implements MoonLakeGUI {
 
         if(!setupMoonLake()) {
 
-            this.log("前置月色之湖核心 API 插件加载失败.");
+            this.getMLogger().warn("前置月色之湖核心 API 插件加载失败.");
             this.getServer().getPluginManager().disablePlugin(this);
             return;
         }
         manager = new GUIManager(getInstance());
 
         this.getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
-        this.log("月色之湖 GUI 插件 v" + getDescription().getVersion() + " 成功加载.");
+        this.getMLogger().info("月色之湖 GUI 插件 v" + getDescription().getVersion() + " 成功加载.");
     }
 
     @Override
@@ -98,14 +97,14 @@ public class GUIPlugin extends JavaPlugin implements MoonLakeGUI {
     }
 
     /**
-     * 给控制台输出日志信息
+     * 获取月色之湖控制台日志对象
      *
-     * @param message 日志
+     * @return 日志对象
      */
     @Override
-    public void log(String message) {
+    public MLogger getMLogger() {
 
-        this.console.sendMessage("[MoonLakeGUI] " + Util.color(message));
+        return mLogger;
     }
 
     /**

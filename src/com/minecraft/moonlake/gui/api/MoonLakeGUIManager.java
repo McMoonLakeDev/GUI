@@ -85,14 +85,6 @@ public interface MoonLakeGUIManager {
     boolean hasGUI(String name);
 
     /**
-     * 获取 GUI 对象从物品栏标题
-     *
-     * @param title 标题
-     * @return GUI 对象 没有则返回 null
-     */
-    GUI fromTitle(String title);
-
-    /**
      * 获取 GUI 对象从物品栏
      *
      * @param inventory 物品栏

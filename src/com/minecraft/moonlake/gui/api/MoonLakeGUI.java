@@ -1,5 +1,6 @@
 package com.minecraft.moonlake.gui.api;
 
+import com.minecraft.moonlake.api.MLogger;
 import com.minecraft.moonlake.gui.GUIPlugin;
 
 /**
@@ -22,11 +23,11 @@ public interface MoonLakeGUI {
     MoonLakeGUI getInstance();
 
     /**
-     * 给控制台输出日志信息
+     * 获取月色之湖控制台日志对象
      *
-     * @param message 日志
+     * @return 日志对象
      */
-    void log(String message);
+    MLogger getMLogger();
 
     /**
      * 获取月色之湖 GUI 管理实例对象

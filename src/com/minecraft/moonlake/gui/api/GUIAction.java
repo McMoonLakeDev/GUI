@@ -101,6 +101,26 @@ public enum GUIAction {
         }
     }
 
+    /**
+     * 获取此 GUI 交互类型是否为光标物品放入点击槽
+     *
+     * @return true 则是 else 不是
+     */
+    public boolean isPlace() {
+
+        return this == PLACE_ONE || this == PLACE_SOME || this == PLACE_ALL;
+    }
+
+    /**
+     * 获取此 GUI 交互类型是否为点击槽的物品被移动到光标
+     *
+     * @return true 则是 else 不是
+     */
+    public boolean isPickup() {
+
+        return this == PICKUP_ONE || this == PICKUP_SOME || this == PICKUP_SOME || this == PICKUP_ALL;
+    }
+
     public static GUIAction fromType(String type) {
 
         GUIAction guiAction = NAME_MAP.get(type);
