@@ -5,6 +5,8 @@ import com.minecraft.moonlake.gui.api.GUIAction;
 import com.minecraft.moonlake.gui.api.GUIClickType;
 import com.minecraft.moonlake.gui.api.MoonLakeGUI;
 import com.minecraft.moonlake.gui.api.button.GUIButton;
+import com.minecraft.moonlake.gui.api.button.GUIButtonClick;
+import com.minecraft.moonlake.gui.api.button.GUIButtonExecute;
 import com.minecraft.moonlake.gui.api.event.MoonLakeGUIClickEvent;
 import com.minecraft.moonlake.gui.api.event.MoonLakeGUICloseEvent;
 import com.minecraft.moonlake.gui.api.event.MoonLakeGUIOpenEvent;
@@ -59,6 +61,11 @@ public class InventoryListener implements Listener {
 
         MoonLakeGUICloseEvent mgce = new MoonLakeGUICloseEvent(gui, (Player)event.getPlayer());
         Bukkit.getServer().getPluginManager().callEvent(mgce);
+
+        if(gui.isCloseToUnregister()) {
+
+            gui.unregister();
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -94,14 +101,42 @@ public class InventoryListener implements Listener {
             }
         }
         if(button == null) return;
-        if(button.getExecute() == null) return;
 
-        MoonLakeGUIClickEvent mgce = new MoonLakeGUIClickEvent(gui, player, button.getSlot(), guiAction, guiClickType);
-        Bukkit.getServer().getPluginManager().callEvent(mgce);
+        GUIButtonExecute execute = null;
 
-        if(!mgce.isCancelled()) {
+        if(guiClickType == GUIClickType.LEFT) {
 
-            button.getExecute().execute(gui, player, button);
+            execute = button.getExecute(GUIButtonClick.LEFT_CLICK);
+        }
+        else if(guiClickType == GUIClickType.SHIFT_LEFT) {
+
+            execute = button.getExecute(GUIButtonClick.SHIFT_LEFT_CLICK);
+        }
+        else if(guiClickType == GUIClickType.RIGHT) {
+
+            execute = button.getExecute(GUIButtonClick.RIGHT_CLICK);
+        }
+        else if(guiClickType == GUIClickType.SHIFT_RIGHT) {
+
+            execute = button.getExecute(GUIButtonClick.SHIFT_RIGHT_CLICK);
+        }
+        else if(guiClickType == GUIClickType.DOUBLE_CLICK) {
+
+            execute = button.getExecute(GUIButtonClick.DOUBLE_CLICK);
+        }
+        else if(guiClickType == GUIClickType.MIDDLE) {
+
+            execute = button.getExecute(GUIButtonClick.MIDDLE_CLICK);
+        }
+        if(execute != null) {
+
+            MoonLakeGUIClickEvent mgce = new MoonLakeGUIClickEvent(gui, player, button.getSlot(), guiAction, guiClickType);
+            Bukkit.getServer().getPluginManager().callEvent(mgce);
+
+            if(!mgce.isCancelled()) {
+
+                execute.execute(gui, player, button);
+            }
         }
     }
 

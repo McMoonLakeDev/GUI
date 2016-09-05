@@ -117,4 +117,14 @@ public class GUIPlugin extends JavaPlugin implements MoonLakeGUI {
 
         return manager;
     }
+
+    /**
+     * 获取月色之湖 GUI 管理实例对象
+     *
+     * @return 管理实例对象
+     */
+    public static MoonLakeGUIManager getManagers() {
+
+        return getInstances().getManager();
+    }
 }

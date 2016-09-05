@@ -40,22 +40,37 @@ public void onEnable() {
 ```
 新建一个 GUI 对象并添加按钮行为以及注册
 ```java
+// 创建 GUI
 GUI gui = manager.createGUI("mygui", "这是我创建的GUI", 6);
-gui.addButton(new ItemStack(Material.DIAMOND), new GUIButtonExecute() {
 
-  @Override
-  public void execute(GUI gui, Player clicked, GUIButton currentButton) {
-    
-    clicked.closeInventory();
-    clicked.sendMessage("你竟然点了一下我创建的GUI 23333");
-  }
+// 创建按钮
+GUIButton guiButton = gui.createButton(5, 3, new ItemStack(Material.DIAMOND));
+guiButton.setClick(GUIButtonClick.LEFT_CLICK, new GUIButtonExecute() {
+    @Override
+    public void execute(GUI gui, Player clicked, GUIButton currentButton) {
+        clicked.closeInventory();
+        clicked.sendMessage("你用鼠标左键点了一下这个按钮 23333");
+    }
+});
+// 支持多种交互方式
+guiButton.setClick(GUIButtonClick.SHIFT_RIGHT_CLICK, new GUIButtonExecute() {
+    @Override
+    public void execute(GUI gui, Player clicked, GUIButton currentButton) {
+        clicked.closeInventory();
+        clicked.sendMessage("你又用 Shift + 鼠标右键点了一下这个按钮 23333");
+    }
 });
 
 // 记着一定要注册你创建的 GUI 对象
-manager.registerGUI(gui);
+gui.register();
 
 // 给一个玩家打开此 GUI 对象
 gui.open(player);
+
+// 如果 GUI 不需要的时候可以用对象来卸载或者用 manager 里面的卸载
+gui.unregister();
+manager.unregister(gui);
+manager.unregister("mygui");
 ```
 ## 其他插件
 * `MoonLake` 核心 API 插件 :point_right:[GO](http://github.com/u2g/MoonLake "MoonLake Plugin")

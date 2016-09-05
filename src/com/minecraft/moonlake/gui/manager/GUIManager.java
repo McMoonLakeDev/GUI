@@ -70,6 +70,24 @@ public final class GUIManager implements MoonLakeGUIManager {
     /**
      * 卸载指定 GUI 对象
      *
+     * @param gui GUI 对象
+     * @return GUI 对象 没有则返回 null
+     */
+    @Override
+    public <T extends GUI> GUI unregisterGUI(T gui) {
+
+        if(gui == null) {
+
+            return null;
+        }
+        GUI_MAP.remove(gui.getName());
+
+        return gui;
+    }
+
+    /**
+     * 卸载指定 GUI 对象
+     *
      * @param name GUI 名称
      * @param <T> GUI 对象
      * @return GUI 对象 没有则返回 null

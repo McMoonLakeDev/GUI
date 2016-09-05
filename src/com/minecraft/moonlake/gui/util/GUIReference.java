@@ -2,9 +2,12 @@ package com.minecraft.moonlake.gui.util;
 
 import com.minecraft.moonlake.api.itemlib.ItemBuilder;
 import com.minecraft.moonlake.api.player.MoonLakePlayer;
+import com.minecraft.moonlake.gui.GUIPlugin;
 import com.minecraft.moonlake.gui.api.GUI;
 import com.minecraft.moonlake.gui.api.button.GUIButton;
+import com.minecraft.moonlake.gui.api.button.GUIButtonClick;
 import com.minecraft.moonlake.gui.api.button.GUIButtonExecute;
+import com.minecraft.moonlake.gui.api.button.GUIButtonWrapped;
 import com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException;
 import com.minecraft.moonlake.gui.exception.IllegalGUIButtonOverflowException;
 import com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException;
@@ -32,6 +35,7 @@ public class GUIReference implements GUI {
     private final Inventory inventory;
 
     private boolean allowMove;
+    private boolean closeToUnregister;
 
     public GUIReference(String name, String title, int size) {
 
@@ -44,6 +48,7 @@ public class GUIReference implements GUI {
         this.size = size;
         this.title = title;
         this.allowMove = false;
+        this.closeToUnregister = false;
         this.buttonMap = new HashMap<>();
         this.inventory = Bukkit.getServer().createInventory(null, size, title);
     }
@@ -82,70 +87,128 @@ public class GUIReference implements GUI {
     }
 
     /**
-     * 设置指定索引为按钮对象
+     * 创建指定索引为按钮对象
      *
      * @param slot 索引
-     * @return GUI 的按钮对象
-     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
-     * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     * @return GUI 按钮对象
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     @Override
-    public GUIButton setButton(int slot) {
+    public GUIButton createButton(int slot) {
 
-        return setButton(slot, GUIUtil.DEFAULT_ICON);
+        return setClickButton(slot, new HashMap<>());
     }
 
     /**
-     * 设置指定二维坐标为按钮对象
+     * 创建指定索引为按钮对象
+     *
+     * @param slot 索引
+     * @param icon 图标
+     * @return GUI 按钮对象
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton createButton(int slot, ItemStack icon) {
+
+        return setClickButton(slot, icon, new HashMap<>());
+    }
+
+    /**
+     * 创建指定二维坐标为按钮对象
      *
      * @param x X 坐标
      * @param y Y 坐标
      * @return GUI 按钮对象
-     * @throws IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
-     * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     @Override
-    public GUIButton setButton(int x, int y) {
+    public GUIButton createButton(int x, int y) {
 
-        return setButton(GUIUtil.getSlot(x, y));
+        return createButton(GUIUtil.getSlot(x, y));
     }
 
     /**
-     * 设置指定索引为物品对象
-     *
-     * @param slot 索引
-     * @param icon 图标
-     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
-     * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
-     */
-    @Override
-    public void setItem(int slot, ItemStack icon) {
-
-        if(slot + 1 > size) {
-
-            throw new IllegalGUISlotOutBoundException();
-        }
-        if(isButton(slot)) {
-
-            throw new IllegalGUIButtonConflictException();
-        }
-        inventory.setItem(slot, icon);
-    }
-
-    /**
-     * 设置指定二维坐标为按钮对象
+     * 创建指定二维坐标为按钮对象
      *
      * @param x    X 坐标
      * @param y    Y 坐标
      * @param icon 图标
      * @return GUI 按钮对象
-     * @throws IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
-     * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     @Override
-    public GUIButton setButton(int x, int y, ItemStack icon) {
+    public GUIButton createButton(int x, int y, ItemStack icon) {
 
-        return setButton(GUIUtil.getSlot(x, y), icon);
+        return createButton(GUIUtil.getSlot(x, y), icon);
+    }
+
+    /**
+     * 设置指定索引为按钮对象
+     *
+     * @param slot    索引
+     * @param click   点击类型
+     * @param execute 执行对象
+     * @return GUI 的按钮对象
+     * @throws IllegalArgumentException          如果点击类型或者执行对象为空则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton setClickButton(int slot, GUIButtonClick click, GUIButtonExecute execute) {
+
+        return setClickButton(slot, GUIUtil.DEFAULT_ICON, click, execute);
+    }
+
+    /**
+     * 设置指定索引为按钮对象
+     *
+     * @param slot    索引
+     * @param wrapped 按钮包装对象
+     * @return GUI 的按钮对象
+     * @throws IllegalArgumentException          如果按钮包装对象为空则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton setClickButton(int slot, GUIButtonWrapped wrapped) {
+
+        return setClickButton(slot, new GUIButtonWrapped[] { wrapped });
+    }
+
+    /**
+     * 设置指定索引为按钮对象
+     *
+     * @param slot    索引
+     * @param wrapped 按钮包装对象
+     * @return GUI 的按钮对象
+     * @throws IllegalArgumentException          如果按钮包装对象为空则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton setClickButton(int slot, GUIButtonWrapped... wrapped) {
+
+        return setClickButton(slot, GUIUtil.DEFAULT_ICON, GUIUtil.wrappedToExecuteMap(wrapped));
+    }
+
+    /**
+     * 设置指定索引为按钮对象
+     *
+     * @param slot       索引
+     * @param executeMap 执行对象集合
+     * @return GUI 的按钮对象
+     * @throws IllegalArgumentException          如果执行对象集合为空则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton setClickButton(int slot, Map<GUIButtonClick, GUIButtonExecute> executeMap) {
+
+        return setClickButton(slot, GUIUtil.DEFAULT_ICON, executeMap);
     }
 
     /**
@@ -153,14 +216,21 @@ public class GUIReference implements GUI {
      *
      * @param slot 索引
      * @param icon 图标
+     * @param click 点击类型
+     * @param execute 执行对象
      * @return GUI 的按钮对象
+     * @throws IllegalArgumentException 如果点击类型或者执行对象为空则抛出异常
      * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
      * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     @Override
-    public GUIButton setButton(int slot, ItemStack icon) {
+    public GUIButton setClickButton(int slot, ItemStack icon, GUIButtonClick click, GUIButtonExecute execute) {
 
-        return setButton(slot, icon, new GUIButtonExecuteNone());
+        if(click == null || execute == null) {
+
+            throw new IllegalArgumentException("The button click or execute object is null.");
+        }
+        return setClickButton(slot, icon, GUIUtil.wrappedToExecuteMap(click, execute));
     }
 
     /**
@@ -168,14 +238,61 @@ public class GUIReference implements GUI {
      *
      * @param slot    索引
      * @param icon    图标
-     * @param execute 执行
+     * @param wrapped 按钮包装对象
      * @return GUI 的按钮对象
-     * @throws com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
-     * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     * @throws IllegalArgumentException          如果按钮包装对象为空则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     @Override
-    public GUIButton setButton(int slot, ItemStack icon, GUIButtonExecute execute) {
+    public GUIButton setClickButton(int slot, ItemStack icon, GUIButtonWrapped wrapped) {
 
+        if(wrapped == null) {
+
+            throw new IllegalArgumentException("The button wrapped object is null.");
+        }
+        return setClickButton(slot, icon, new GUIButtonWrapped[] { wrapped });
+    }
+
+    /**
+     * 设置指定索引为按钮对象
+     *
+     * @param slot    索引
+     * @param icon    图标
+     * @param wrapped 按钮包装对象
+     * @return GUI 的按钮对象
+     * @throws IllegalArgumentException          如果按钮包装对象为空则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton setClickButton(int slot, ItemStack icon, GUIButtonWrapped... wrapped) {
+
+        if(wrapped == null) {
+
+            throw new IllegalArgumentException("The button wrapped object is null.");
+        }
+        return setClickButton(slot, icon, GUIUtil.wrappedToExecuteMap(wrapped));
+    }
+
+    /**
+     * 设置指定索引为按钮对象
+     *
+     * @param slot       索引
+     * @param icon       图标
+     * @param executeMap 执行对象集合
+     * @return GUI 的按钮对象
+     * @throws IllegalArgumentException          如果执行对象集合为空则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton setClickButton(int slot, ItemStack icon, Map<GUIButtonClick, GUIButtonExecute> executeMap) {
+
+        if(executeMap == null) {
+
+            throw new IllegalArgumentException("The button execute map object is null.");
+        }
         if(slot + 1 > size) {
 
             throw new IllegalGUISlotOutBoundException();
@@ -184,7 +301,7 @@ public class GUIReference implements GUI {
 
             throw new IllegalGUIButtonConflictException();
         }
-        GUIButton button = new GUIButtonReference(this, execute, icon, slot);
+        GUIButton button = new GUIButtonReference(this, slot, executeMap);
 
         setItem(slot, icon);
 
@@ -198,13 +315,764 @@ public class GUIReference implements GUI {
      *
      * @param x       X 坐标
      * @param y       Y 坐标
+     * @param click   点击类型
+     * @param execute 执行对象
+     * @return GUI 的按钮对象
+     * @throws IllegalArgumentException          如果点击类型或者执行对象为空则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton setClickButton(int x, int y, GUIButtonClick click, GUIButtonExecute execute) {
+
+        return setClickButton(GUIUtil.getSlot(x, y), click, execute);
+    }
+
+    /**
+     * 设置指定二维坐标为按钮对象
+     *
+     * @param x       X 坐标
+     * @param y       Y 坐标
+     * @param wrapped 按钮包装对象
+     * @return GUI 的按钮对象
+     * @throws IllegalArgumentException          如果按钮包装对象为空则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton setClickButton(int x, int y, GUIButtonWrapped wrapped) {
+
+        return setClickButton(GUIUtil.getSlot(x, y), wrapped);
+    }
+
+    /**
+     * 设置指定二维坐标为按钮对象
+     *
+     * @param x       X 坐标
+     * @param y       Y 坐标
+     * @param wrapped 按钮包装对象
+     * @return GUI 的按钮对象
+     * @throws IllegalArgumentException          如果按钮包装对象为空则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton setClickButton(int x, int y, GUIButtonWrapped[] wrapped) {
+
+        return setClickButton(GUIUtil.getSlot(x, y), wrapped);
+    }
+
+    /**
+     * 设置指定二维坐标为按钮对象
+     *
+     * @param x          X 坐标
+     * @param y          Y 坐标
+     * @param executeMap 执行对象集合
+     * @return GUI 的按钮对象
+     * @throws IllegalArgumentException          如果执行对象集合为空则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton setClickButton(int x, int y, Map<GUIButtonClick, GUIButtonExecute> executeMap) {
+
+        return setClickButton(GUIUtil.getSlot(x, y), executeMap);
+    }
+
+    /**
+     * 设置指定二维坐标为按钮对象
+     *
+     * @param x       X 坐标
+     * @param y       Y 坐标
+     * @param icon    图标
+     * @param click   点击类型
+     * @param execute 执行对象
+     * @return GUI 的按钮对象
+     * @throws IllegalArgumentException          如果点击类型或者执行对象为空则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton setClickButton(int x, int y, ItemStack icon, GUIButtonClick click, GUIButtonExecute execute) {
+
+        return setClickButton(GUIUtil.getSlot(x, y), icon, click, execute);
+    }
+
+    /**
+     * 设置指定二维坐标为按钮对象
+     *
+     * @param x       X 坐标
+     * @param y       Y 坐标
+     * @param icon    图标
+     * @param wrapped 按钮包装对象
+     * @return GUI 的按钮对象
+     * @throws IllegalArgumentException          如果按钮包装对象为空则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton setClickButton(int x, int y, ItemStack icon, GUIButtonWrapped wrapped) {
+
+        return setClickButton(GUIUtil.getSlot(x, y), icon, wrapped);
+    }
+
+    /**
+     * 设置指定二维坐标为按钮对象
+     *
+     * @param x       X 坐标
+     * @param y       Y 坐标
+     * @param icon    图标
+     * @param wrapped 按钮包装对象
+     * @return GUI 的按钮对象
+     * @throws IllegalArgumentException          如果按钮包装对象为空则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton setClickButton(int x, int y, ItemStack icon, GUIButtonWrapped[] wrapped) {
+
+        return setClickButton(GUIUtil.getSlot(x, y), icon, wrapped);
+    }
+
+    /**
+     * 设置指定二维坐标为按钮对象
+     *
+     * @param x          X 坐标
+     * @param y          Y 坐标
+     * @param icon       图标
+     * @param executeMap 执行对象集合
+     * @return GUI 的按钮对象
+     * @throws IllegalArgumentException          如果执行对象集合为空则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton setClickButton(int x, int y, ItemStack icon, Map<GUIButtonClick, GUIButtonExecute> executeMap) {
+
+        return setClickButton(GUIUtil.getSlot(x, y), icon, executeMap);
+    }
+
+    /**
+     * 将此 GUI 添加按钮对象
+     *
+     * @return GUI 的按钮对象
+     * @throws IllegalGUIButtonOverflowException 如果无法再添加按钮则抛出异常
+     */
+    @Override
+    public GUIButton addClickButton() {
+
+        return addClickButton(GUIUtil.DEFAULT_ICON);
+    }
+
+    /**
+     * 将此 GUI 添加按钮对象
+     *
+     * @param icon 图标
+     * @return GUI 的按钮对象
+     * @throws IllegalGUIButtonOverflowException 如果无法再添加按钮则抛出异常
+     */
+    @Override
+    public GUIButton addClickButton(ItemStack icon) {
+
+        return addClickButton(icon, new HashMap<>());
+    }
+
+    /**
+     * 将此 GUI 添加按钮对象
+     *
+     * @param icon    图标
+     * @param wrapped 按钮包装对象
+     * @return GUI 的按钮对象
+     * @throws IllegalArgumentException          如果按钮包装对象为空则抛出异常
+     * @throws IllegalGUIButtonOverflowException 如果无法再添加按钮则抛出异常
+     */
+    @Override
+    public GUIButton addClickButton(ItemStack icon, GUIButtonWrapped wrapped) {
+
+        if(wrapped == null) {
+
+            throw new IllegalArgumentException("The button wrapped object is null.");
+        }
+        return addClickButton(icon, GUIUtil.wrappedToExecuteMap(wrapped));
+    }
+
+    /**
+     * 将此 GUI 添加按钮对象
+     *
+     * @param icon    图标
+     * @param wrapped 按钮包装对象
+     * @return GUI 的按钮对象
+     * @throws IllegalArgumentException          如果按钮包装对象为空则抛出异常
+     * @throws IllegalGUIButtonOverflowException 如果无法再添加按钮则抛出异常
+     */
+    @Override
+    public GUIButton addClickButton(ItemStack icon, GUIButtonWrapped[] wrapped) {
+
+        if(wrapped == null) {
+
+            throw new IllegalArgumentException("The button wrapped object is null.");
+        }
+        return addClickButton(icon, GUIUtil.wrappedToExecuteMap(wrapped));
+    }
+
+    /**
+     * 将此 GUI 添加按钮对象
+     *
+     * @param icon    图标
+     * @param click   点击类型
+     * @param execute 执行对象
+     * @return GUI 的按钮对象
+     * @throws IllegalArgumentException          如果点击类型或者执行对象为空则抛出异常
+     * @throws IllegalGUIButtonOverflowException 如果无法再添加按钮则抛出异常
+     */
+    @Override
+    public GUIButton addClickButton(ItemStack icon, GUIButtonClick click, GUIButtonExecute execute) {
+
+        if(click == null || execute == null) {
+
+            throw new IllegalArgumentException("The button click or execute object is null.");
+        }
+        return addClickButton(icon, GUIUtil.wrappedToExecuteMap(click, execute));
+    }
+
+    /**
+     * 将此 GUI 添加按钮对象
+     *
+     * @param icon       图标
+     * @param executeMap 执行对象集合
+     * @return GUI 的按钮对象
+     * @throws IllegalArgumentException          如果执行对象集合为空则抛出异常
+     * @throws IllegalGUIButtonOverflowException 如果无法再添加按钮则抛出异常
+     */
+    @Override
+    public GUIButton addClickButton(ItemStack icon, Map<GUIButtonClick, GUIButtonExecute> executeMap) {
+
+        if(executeMap == null) {
+
+            throw new IllegalArgumentException("The button execute map object is null.");
+        }
+        if(buttonMap.size() >= size) {
+
+            throw new IllegalGUIButtonOverflowException();
+        }
+        int slot = -1;
+
+        for(int i = 0; i < size; i++) {
+
+            if(isButton(i)) {
+
+                continue;
+            }
+            slot = i;
+
+            break;
+        }
+        if(slot == -1) {
+
+            throw new IllegalGUIButtonOverflowException();
+        }
+        return setClickButton(slot, icon, executeMap);
+    }
+
+    /**
+     * 设置指定索引集合为相同的按钮对象
+     *
+     * @param slots   索引集合
+     * @param icon    图标
+     * @param wrapped 按钮包装对象
+     * @return GUI 按钮对象集合
+     * @throws IllegalArgumentException          如果按钮包装对象为空则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton[] setSameClickButton(int[] slots, ItemStack icon, GUIButtonWrapped wrapped) {
+
+        if(wrapped == null) {
+
+            throw new IllegalArgumentException("The button wrapped object is null.");
+        }
+        return setSameClickButton(slots, icon, GUIUtil.wrappedToExecuteMap(wrapped));
+    }
+
+    /**
+     * 设置指定索引集合为相同的按钮对象
+     *
+     * @param slots   索引集合
+     * @param icon    图标
+     * @param wrapped 按钮包装对象
+     * @return GUI 按钮对象集合
+     * @throws IllegalArgumentException          如果按钮包装对象为空则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton[] setSameClickButton(int[] slots, ItemStack icon, GUIButtonWrapped[] wrapped) {
+
+        if(wrapped == null) {
+
+            throw new IllegalArgumentException("The button wrapped object is null.");
+        }
+        return setSameClickButton(slots, icon, GUIUtil.wrappedToExecuteMap(wrapped));
+    }
+
+    /**
+     * 设置指定索引集合为相同的按钮对象
+     *
+     * @param slots   索引集合
+     * @param icon    图标
+     * @param click   点击类型
+     * @param execute 执行对象
+     * @return GUI 按钮对象集合
+     * @throws IllegalArgumentException          如果点击类型或者执行对象为空则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton[] setSameClickButton(int[] slots, ItemStack icon, GUIButtonClick click, GUIButtonExecute execute) {
+
+        if(click == null || execute == null) {
+
+            throw new IllegalArgumentException("The button click or execute object is null.");
+        }
+        return setSameClickButton(slots, icon, GUIUtil.wrappedToExecuteMap(click, execute));
+    }
+
+    /**
+     * 设置指定索引集合为相同的按钮对象
+     *
+     * @param slots      索引集合
+     * @param icon       图标
+     * @param executeMap 执行对象集合
+     * @return GUI 按钮对象集合
+     * @throws IllegalArgumentException          如果执行对象集合为空则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton[] setSameClickButton(int[] slots, ItemStack icon, Map<GUIButtonClick, GUIButtonExecute> executeMap) {
+
+        if(executeMap == null) {
+
+            throw new IllegalArgumentException("The button execute map object is null.");
+        }
+        if(slots == null || slots.length <= 0) {
+
+            throw new IllegalArgumentException("The slot or icons argument exception.");
+        }
+        GUIButton[] buttons = new GUIButton[slots.length];
+
+        for(int i = 0; i < slots.length; i++) {
+
+            buttons[i] = setClickButton(slots[i], icon, executeMap);
+        }
+        return buttons;
+    }
+
+    /**
+     * 设置指定二维坐标集合为相同的按钮对象
+     *
+     * @param x       X 坐标
+     * @param y       Y 坐标
+     * @param icon    图标
+     * @param wrapped 按钮包装对象
+     * @return GUI 按钮对象集合
+     * @throws IllegalArgumentException          如果按钮包装对象为空则抛出异常
+     * @throws IllegalArgumentException          如果二维坐标参数集合不正确则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton[] setSameClickButton(int[] x, int[] y, ItemStack icon, GUIButtonWrapped wrapped) {
+
+        if(wrapped == null) {
+
+            throw new IllegalArgumentException("The button wrapped object is null.");
+        }
+        return setSameClickButton(x, y, icon, GUIUtil.wrappedToExecuteMap(wrapped));
+    }
+
+    /**
+     * 设置指定二维坐标集合为相同的按钮对象
+     *
+     * @param x       X 坐标
+     * @param y       Y 坐标
+     * @param icon    图标
+     * @param wrapped 按钮包装对象
+     * @return GUI 按钮对象集合
+     * @throws IllegalArgumentException          如果按钮包装对象为空则抛出异常
+     * @throws IllegalArgumentException          如果二维坐标参数集合不正确则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton[] setSameClickButton(int[] x, int[] y, ItemStack icon, GUIButtonWrapped[] wrapped) {
+
+        if(wrapped == null) {
+
+            throw new IllegalArgumentException("The button wrapped object is null.");
+        }
+        return setSameClickButton(x, y, icon, GUIUtil.wrappedToExecuteMap(wrapped));
+    }
+
+    /**
+     * 设置指定二维坐标集合为相同的按钮对象
+     *
+     * @param x       X 坐标
+     * @param y       Y 坐标
+     * @param icon    图标
+     * @param click   点击类型
+     * @param execute 执行对象
+     * @return GUI 按钮对象集合
+     * @throws IllegalArgumentException          如果点击类型或者执行对象为空则抛出异常
+     * @throws IllegalArgumentException          如果二维坐标参数集合不正确则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton[] setSameClickButton(int[] x, int[] y, ItemStack icon, GUIButtonClick click, GUIButtonExecute execute) {
+
+        if(click == null || execute == null) {
+
+            throw new IllegalArgumentException("The button click or execute object is null.");
+        }
+        return setSameClickButton(x, y, icon, GUIUtil.wrappedToExecuteMap(click, execute));
+    }
+
+    /**
+     * 设置指定二维坐标集合为相同的按钮对象
+     *
+     * @param x          X 坐标
+     * @param y          Y 坐标
+     * @param icon       图标
+     * @param executeMap 执行对象集合
+     * @return GUI 按钮对象集合
+     * @throws IllegalArgumentException          如果执行对象集合为空则抛出异常
+     * @throws IllegalArgumentException          如果二维坐标参数集合不正确则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton[] setSameClickButton(int[] x, int[] y, ItemStack icon, Map<GUIButtonClick, GUIButtonExecute> executeMap) {
+
+        if(executeMap == null) {
+
+            throw new IllegalArgumentException("The button execute map object is null.");
+        }
+        if(x == null || y == null || x.length != y.length) {
+
+            throw new IllegalArgumentException("The two dimension coordinate argument exception.");
+        }
+        int[] slots = new int[x.length];
+
+        for(int i = 0; i < slots.length; i++) {
+
+            slots[i] = GUIUtil.getSlot(x[i], y[i]);
+        }
+        return setSameClickButton(slots, icon, executeMap);
+    }
+
+    /**
+     * 设置指定索引集合为相同的按钮对象
+     *
+     * @param slots   索引集合
+     * @param icons   图标集合
+     * @param wrapped 按钮包装对象
+     * @return GUI 按钮对象集合
+     * @throws IllegalArgumentException          如果按钮包装对象为空则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton[] setSameClickButton(int[] slots, ItemStack[] icons, GUIButtonWrapped wrapped) {
+
+        if(wrapped == null) {
+
+            throw new IllegalArgumentException("The button wrapped object is null.");
+        }
+        return setSameClickButton(slots, icons, GUIUtil.wrappedToExecuteMap(wrapped));
+    }
+
+    /**
+     * 设置指定索引集合为相同的按钮对象
+     *
+     * @param slots   索引集合
+     * @param icons   图标集合
+     * @param wrapped 按钮包装对象
+     * @return GUI 按钮对象集合
+     * @throws IllegalArgumentException          如果按钮包装对象为空则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton[] setSameClickButton(int[] slots, ItemStack[] icons, GUIButtonWrapped[] wrapped) {
+
+        if(wrapped == null) {
+
+            throw new IllegalArgumentException("The button wrapped object is null.");
+        }
+        return setSameClickButton(slots, icons, GUIUtil.wrappedToExecuteMap(wrapped));
+    }
+
+    /**
+     * 设置指定索引集合为相同的按钮对象
+     *
+     * @param slots   索引集合
+     * @param icons   图标集合
+     * @param click   点击类型
+     * @param execute 执行对象
+     * @return GUI 按钮对象集合
+     * @throws IllegalArgumentException          如果点击类型或者执行对象为空则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton[] setSameClickButton(int[] slots, ItemStack[] icons, GUIButtonClick click, GUIButtonExecute execute) {
+
+        if(click == null || execute == null) {
+
+            throw new IllegalArgumentException("The button click or execute object is null.");
+        }
+        return setSameClickButton(slots, icons, GUIUtil.wrappedToExecuteMap(click, execute));
+    }
+
+    /**
+     * 设置指定索引集合为相同的按钮对象
+     *
+     * @param slots      索引集合
+     * @param icons      图标集合
+     * @param executeMap 执行对象集合
+     * @return GUI 按钮对象集合
+     * @throws IllegalArgumentException          如果执行对象集合为空则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton[] setSameClickButton(int[] slots, ItemStack[] icons, Map<GUIButtonClick, GUIButtonExecute> executeMap) {
+
+        if(executeMap == null) {
+
+            throw new IllegalArgumentException("The button execute map object is null.");
+        }
+        if(slots == null || slots.length <= 0 || icons == null) {
+
+            throw new IllegalArgumentException("The slot or icons argument exception.");
+        }
+        List<ItemStack> icons0 = new ArrayList<>(Arrays.asList(icons));
+
+        if(icons0.size() < slots.length) {
+
+            for(int i = icons0.size(); i < slots.length; i++) {
+
+                icons0.add(GUIUtil.DEFAULT_ICON);
+            }
+        }
+        GUIButton[] buttons = new GUIButton[slots.length];
+
+        for(int i = 0; i < slots.length; i++) {
+
+            buttons[i] = setClickButton(slots[i], icons0.get(i), executeMap);
+        }
+        return buttons;
+    }
+
+    /**
+     * 设置指定二维坐标集合为相同的按钮对象
+     *
+     * @param x       X 坐标
+     * @param y       Y 坐标
+     * @param icons   图标集合
+     * @param wrapped 按钮包装对象
+     * @return GUI 按钮对象集合
+     * @throws IllegalArgumentException          如果按钮包装对象为空则抛出异常
+     * @throws IllegalArgumentException          如果二维坐标参数集合不正确则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton[] setSameClickButton(int[] x, int[] y, ItemStack[] icons, GUIButtonWrapped wrapped) {
+
+        if(wrapped == null) {
+
+            throw new IllegalArgumentException("The button wrapped object is null.");
+        }
+        return setSameClickButton(x, y, icons, GUIUtil.wrappedToExecuteMap(wrapped));
+    }
+
+    /**
+     * 设置指定二维坐标集合为相同的按钮对象
+     *
+     * @param x       X 坐标
+     * @param y       Y 坐标
+     * @param icons   图标集合
+     * @param wrapped 按钮包装对象
+     * @return GUI 按钮对象集合
+     * @throws IllegalArgumentException          如果按钮包装对象为空则抛出异常
+     * @throws IllegalArgumentException          如果二维坐标参数集合不正确则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton[] setSameClickButton(int[] x, int[] y, ItemStack[] icons, GUIButtonWrapped[] wrapped) {
+
+        if(wrapped == null) {
+
+            throw new IllegalArgumentException("The button wrapped object is null.");
+        }
+        return setSameClickButton(x, y, icons, GUIUtil.wrappedToExecuteMap(wrapped));
+    }
+
+    /**
+     * 设置指定二维坐标集合为相同的按钮对象
+     *
+     * @param x       X 坐标
+     * @param y       Y 坐标
+     * @param icons   图标集合
+     * @param click   点击类型
+     * @param execute 执行对象
+     * @return GUI 按钮对象集合
+     * @throws IllegalArgumentException          如果点击类型或者执行对象为空则抛出异常
+     * @throws IllegalArgumentException          如果二维坐标参数集合不正确则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton[] setSameClickButton(int[] x, int[] y, ItemStack[] icons, GUIButtonClick click, GUIButtonExecute execute) {
+
+        if(click == null || execute == null) {
+
+            throw new IllegalArgumentException("The button click or execute object is null.");
+        }
+        return setSameClickButton(x, y, icons, GUIUtil.wrappedToExecuteMap(click, execute));
+    }
+
+    /**
+     * 设置指定二维坐标集合为相同的按钮对象
+     *
+     * @param x          X 坐标
+     * @param y          Y 坐标
+     * @param icons      图标集合
+     * @param executeMap 执行对象集合
+     * @return GUI 按钮对象集合
+     * @throws IllegalArgumentException          如果执行对象集合为空则抛出异常
+     * @throws IllegalArgumentException          如果二维坐标参数集合不正确则抛出异常
+     * @throws IllegalGUISlotOutBoundException   如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public GUIButton[] setSameClickButton(int[] x, int[] y, ItemStack[] icons, Map<GUIButtonClick, GUIButtonExecute> executeMap) {
+
+        if(executeMap == null) {
+
+            throw new IllegalArgumentException("The button execute map object is null.");
+        }
+        if(x == null || y == null || x.length != y.length) {
+
+            throw new IllegalArgumentException("The two dimension coordinate argument exception.");
+        }
+        int[] slots = new int[x.length];
+
+        for(int i = 0; i < slots.length; i++) {
+
+            slots[i] = GUIUtil.getSlot(x[i], y[i]);
+        }
+        return setSameClickButton(slots, icons, executeMap);
+    }
+
+    /**
+     * 设置指定索引为按钮对象
+     *
+     * @param slot 索引
+     * @return GUI 的按钮对象
+     * @throws IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    @Deprecated
+    public GUIButton setButton(int slot) {
+
+        return setButton(slot, GUIUtil.DEFAULT_ICON);
+    }
+
+    /**
+     * 设置指定二维坐标为按钮对象
+     *
+     * @param x X 坐标
+     * @param y Y 坐标
+     * @return GUI 按钮对象
+     * @throws IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    @Deprecated
+    public GUIButton setButton(int x, int y) {
+
+        return setButton(GUIUtil.getSlot(x, y));
+    }
+
+    /**
+     * 设置指定二维坐标为按钮对象
+     *
+     * @param x    X 坐标
+     * @param y    Y 坐标
+     * @param icon 图标
+     * @return GUI 按钮对象
+     * @throws IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    @Deprecated
+    public GUIButton setButton(int x, int y, ItemStack icon) {
+
+        return setButton(GUIUtil.getSlot(x, y), icon);
+    }
+
+    /**
+     * 设置指定索引为按钮对象
+     *
+     * @param slot 索引
+     * @param icon 图标
+     * @return GUI 的按钮对象
+     * @throws IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    @Deprecated
+    public GUIButton setButton(int slot, ItemStack icon) {
+
+        return setButton(slot, icon, new GUIButtonExecuteNone());
+    }
+
+    /**
+     * 设置指定索引为按钮对象
+     *
+     * @param slot    索引
+     * @param icon    图标
+     * @param execute 执行
+     * @return GUI 的按钮对象
+     * @throws IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    @Deprecated
+    public GUIButton setButton(int slot, ItemStack icon, GUIButtonExecute execute) {
+
+        return setClickButton(slot, icon, GUIButtonClick.LEFT_CLICK, execute);
+    }
+
+    /**
+     * 设置指定二维坐标为按钮对象
+     *
+     * @param x       X 坐标
+     * @param y       Y 坐标
      * @param icon    图标
      * @param execute 执行
      * @return GUI 按钮对象
      * @throws IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
-     * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     @Override
+    @Deprecated
     public GUIButton setButton(int x, int y, ItemStack icon, GUIButtonExecute execute) {
 
         return setButton(GUIUtil.getSlot(x, y), icon, execute);
@@ -222,6 +1090,7 @@ public class GUIReference implements GUI {
      * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     @Override
+    @Deprecated
     public GUIButton[] setSameButton(int[] slots, ItemStack[] icons, GUIButtonExecute execute) {
 
         if(slots == null || slots.length <= 0 || icons == null) {
@@ -257,6 +1126,7 @@ public class GUIReference implements GUI {
      * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     @Override
+    @Deprecated
     public GUIButton[] setSameButton(int[] slots, ItemStack icon, GUIButtonExecute execute) {
 
         if(slots == null || slots.length <= 0 || icon == null) {
@@ -285,6 +1155,7 @@ public class GUIReference implements GUI {
      * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     @Override
+    @Deprecated
     public GUIButton[] setSameButton(int[] x, int[] y, ItemStack[] icons, GUIButtonExecute execute) {
 
         if(x == null || y == null || x.length != y.length) {
@@ -313,6 +1184,7 @@ public class GUIReference implements GUI {
      * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
      */
     @Override
+    @Deprecated
     public GUIButton[] setSameButton(int[] x, int[] y, ItemStack icon, GUIButtonExecute execute) {
 
         if(x == null || y == null || x.length != y.length) {
@@ -326,6 +1198,28 @@ public class GUIReference implements GUI {
             slots[i] = GUIUtil.getSlot(x[i], y[i]);
         }
         return setSameButton(slots, icon, execute);
+    }
+
+    /**
+     * 设置指定索引为物品对象
+     *
+     * @param slot 索引
+     * @param icon 图标
+     * @throws IllegalGUISlotOutBoundException 如果索引越界超出大小则抛出异常
+     * @throws IllegalGUIButtonConflictException 如果此索引已经为按钮则抛出异常
+     */
+    @Override
+    public void setItem(int slot, ItemStack icon) {
+
+        if(slot + 1 > size) {
+
+            throw new IllegalGUISlotOutBoundException();
+        }
+        if(isButton(slot)) {
+
+            throw new IllegalGUIButtonConflictException();
+        }
+        inventory.setItem(slot, icon);
     }
 
     /**
@@ -352,8 +1246,7 @@ public class GUIReference implements GUI {
 
             return;
         }
-        button.setIcon(icon);
-        inventory.setItem(slot, button.getIcon());
+        inventory.setItem(slot, icon);
     }
 
     /**
@@ -378,9 +1271,10 @@ public class GUIReference implements GUI {
      * @throws IllegalGUIButtonOverflowException 如果无法再添加按钮则抛出异常
      */
     @Override
+    @Deprecated
     public GUIButton addButton(ItemStack icon) {
 
-        return addButton(icon, new GUIButtonExecuteNone());
+        return addClickButton(icon);
     }
 
     /**
@@ -392,31 +1286,10 @@ public class GUIReference implements GUI {
      * @throws IllegalGUIButtonOverflowException 如果无法再添加按钮则抛出异常
      */
     @Override
+    @Deprecated
     public GUIButton addButton(ItemStack icon, GUIButtonExecute execute) {
 
-        if(buttonMap.size() >= size) {
-
-            throw new IllegalGUIButtonOverflowException();
-        }
-        int slot = -1;
-
-        for(int i = 0; i < size; i++) {
-
-            ItemStack invIcon = inventory.getItem(i);
-
-            if(invIcon != null && invIcon.getType() != Material.AIR) {
-
-                continue;
-            }
-            slot = i;
-
-            break;
-        }
-        if(slot == -1) {
-
-            throw new IllegalGUIButtonOverflowException();
-        }
-        return setButton(slot, icon, execute);
+        return addClickButton(icon, GUIButtonClick.LEFT_CLICK, execute);
     }
 
     /**
@@ -479,9 +1352,9 @@ public class GUIReference implements GUI {
 
         Set<GUIButton> guiButtonSet = new HashSet<>();
 
-        for(GUIButton guiButton : buttonMap.values()) {
+        if(buttonMap.size() > 0) {
 
-            guiButtonSet.add(guiButton);
+            guiButtonSet.addAll(buttonMap.values());
         }
         return guiButtonSet.size() > 0 ? guiButtonSet : null;
     }
@@ -616,10 +1489,15 @@ public class GUIReference implements GUI {
      * 将此 GUI 对象打开给指定玩家
      *
      * @param player 玩家
+     * @throws IllegalArgumentException 如果玩家对象为空或不在线则抛出异常
      */
     @Override
     public void open(Player player) {
 
+        if(player == null || !player.isOnline()) {
+
+            throw new IllegalArgumentException("The open gui player object is null or not online.");
+        }
         player.openInventory(inventory);
     }
 
@@ -627,11 +1505,16 @@ public class GUIReference implements GUI {
      * 将此 GUI 对象打开给指定玩家
      *
      * @param player 玩家
+     * @throws IllegalArgumentException 如果玩家对象为空或不在线则抛出异常
      */
     @Override
     public void open(MoonLakePlayer player) {
 
-        player.openInventory(inventory);
+        if(player == null) {
+
+            throw new IllegalArgumentException("The open gui player object is null.");
+        }
+        open(player.getBukkitPlayer());
     }
 
     /**
@@ -656,6 +1539,28 @@ public class GUIReference implements GUI {
         this.allowMove = flag;
     }
 
+    /**
+     * 获取此 GUI 对象是否将关闭后从对象集合卸载
+     *
+     * @return true 则关闭后卸载 else 不卸载
+     */
+    @Override
+    public boolean isCloseToUnregister() {
+
+        return closeToUnregister;
+    }
+
+    /**
+     * 设置此 GUI 对象是否将关闭后从对象集合卸载
+     *
+     * @param flag true 则关闭后卸载 else 不卸载
+     */
+    @Override
+    public void onCloseToUnregister(boolean flag) {
+
+        this.closeToUnregister = flag;
+    }
+
     @Override
     public int hashCode() {
 
@@ -669,6 +1574,10 @@ public class GUIReference implements GUI {
 
             return false;
         }
+        if(obj == this) {
+
+            return true;
+        }
         if(obj instanceof GUI) {
 
             GUI gui = (GUI) obj;
@@ -680,5 +1589,25 @@ public class GUIReference implements GUI {
             return guiBase.equals(inventory);
         }
         return false;
+    }
+
+    /**
+     * 将此 GUI 对象注册到对象集合
+     */
+    @Override
+    @Deprecated
+    public void register() {
+
+        GUIPlugin.getManagers().registerGUI(this);
+    }
+
+    /**
+     * 将此 GUI 对象从对象集合卸载
+     */
+    @Override
+    @Deprecated
+    public void unregister() {
+
+        GUIPlugin.getManagers().unregisterGUI(this);
     }
 }

@@ -39,6 +39,15 @@ public interface MoonLakeGUIManager {
     /**
      * 卸载指定 GUI 对象
      *
+     * @param gui GUI 对象
+     * @param <T> GUI 对象
+     * @return GUI 对象 没有则返回 null
+     */
+    <T extends GUI> GUI unregisterGUI(T gui);
+
+    /**
+     * 卸载指定 GUI 对象
+     *
      * @param name GUI 名称
      * @param <T> GUI 对象
      * @return GUI 对象 没有则返回 null

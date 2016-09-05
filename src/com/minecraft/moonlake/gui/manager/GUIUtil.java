@@ -1,8 +1,15 @@
 package com.minecraft.moonlake.gui.manager;
 
 import com.minecraft.moonlake.api.itemlib.ItemBuilder;
+import com.minecraft.moonlake.gui.api.button.GUIButtonClick;
+import com.minecraft.moonlake.gui.api.button.GUIButtonExecute;
+import com.minecraft.moonlake.gui.api.button.GUIButtonWrapped;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by MoonLake on 2016/7/25.
@@ -13,7 +20,7 @@ public final class GUIUtil {
 
     static {
 
-        DEFAULT_ICON = new ItemBuilder(Material.BEDROCK).build();
+        DEFAULT_ICON = new ItemBuilder(Material.BEDROCK, 0, ChatColor.GRAY + "GUI DEFAULT ICON").build();
     }
 
     /**
@@ -37,5 +44,45 @@ public final class GUIUtil {
     public static int getSlot(int x, int y) {
 
         return (y * 9) - (9 - x) - 1;
+    }
+
+    /**
+     * 将按钮包装对象数组转换到按钮执行对象集合
+     *
+     * @param wrapped 按钮包装对象数组
+     * @return 按钮执行对象集合 没有则返回空集合
+     */
+    public static Map<GUIButtonClick, GUIButtonExecute> wrappedToExecuteMap(GUIButtonWrapped... wrapped) {
+
+        if(wrapped == null || wrapped.length <= 0) {
+
+            return new HashMap<>();
+        }
+        Map<GUIButtonClick, GUIButtonExecute> executeMap = new HashMap<>();
+
+        for(GUIButtonWrapped wrapped0 : wrapped) {
+
+            executeMap.put(wrapped0.getClick(), wrapped0.getExecute());
+        }
+        return executeMap;
+    }
+
+    /**
+     * 将按钮包装对象数组转换到按钮执行对象集合
+     *
+     * @param click 点击类型
+     * @param execute 执行对象
+     * @return 按钮执行对象集合 没有则返回空集合
+     */
+    public static Map<GUIButtonClick, GUIButtonExecute> wrappedToExecuteMap(GUIButtonClick click, GUIButtonExecute execute) {
+
+        if(click == null || execute == null) {
+
+            return new HashMap<>();
+        }
+        Map<GUIButtonClick, GUIButtonExecute> executeMap = new HashMap<>();
+        executeMap.put(click, execute);
+
+        return executeMap;
     }
 }
