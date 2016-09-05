@@ -459,6 +459,7 @@ public class GUIReference implements GUI {
      * @throws IllegalGUIButtonOverflowException 如果无法再添加按钮则抛出异常
      */
     @Override
+    @Deprecated
     public GUIButton addClickButton() {
 
         return addClickButton(GUIUtil.DEFAULT_ICON);
@@ -1093,26 +1094,7 @@ public class GUIReference implements GUI {
     @Deprecated
     public GUIButton[] setSameButton(int[] slots, ItemStack[] icons, GUIButtonExecute execute) {
 
-        if(slots == null || slots.length <= 0 || icons == null) {
-
-            throw new IllegalArgumentException("The slot or icons argument exception.");
-        }
-        List<ItemStack> icons0 = new ArrayList<>(Arrays.asList(icons));
-
-        if(icons0.size() < slots.length) {
-
-            for(int i = icons0.size(); i < slots.length; i++) {
-
-                icons0.add(GUIUtil.DEFAULT_ICON);
-            }
-        }
-        GUIButton[] buttons = new GUIButton[slots.length];
-
-        for(int i = 0; i < slots.length; i++) {
-
-            buttons[i] = setButton(slots[i], icons0.get(i), execute);
-        }
-        return buttons;
+        return setSameClickButton(slots, icons, GUIButtonClick.LEFT_CLICK, execute);
     }
 
     /**
@@ -1129,17 +1111,7 @@ public class GUIReference implements GUI {
     @Deprecated
     public GUIButton[] setSameButton(int[] slots, ItemStack icon, GUIButtonExecute execute) {
 
-        if(slots == null || slots.length <= 0 || icon == null) {
-
-            throw new IllegalArgumentException("The slot or icons argument exception.");
-        }
-        GUIButton[] buttons = new GUIButton[slots.length];
-
-        for(int i = 0; i < slots.length; i++) {
-
-            buttons[i] = setButton(slots[i], icon, execute);
-        }
-        return buttons;
+        return setSameClickButton(slots, icon, GUIButtonClick.LEFT_CLICK, execute);
     }
 
     /**
@@ -1158,17 +1130,7 @@ public class GUIReference implements GUI {
     @Deprecated
     public GUIButton[] setSameButton(int[] x, int[] y, ItemStack[] icons, GUIButtonExecute execute) {
 
-        if(x == null || y == null || x.length != y.length) {
-
-            throw new IllegalArgumentException("The two dimension coordinate argument exception.");
-        }
-        int[] slots = new int[x.length];
-
-        for(int i = 0; i < slots.length; i++) {
-
-            slots[i] = GUIUtil.getSlot(x[i], y[i]);
-        }
-        return setSameButton(slots, icons, execute);
+        return setSameClickButton(x, y, icons, GUIButtonClick.LEFT_CLICK, execute);
     }
 
     /**
@@ -1187,17 +1149,7 @@ public class GUIReference implements GUI {
     @Deprecated
     public GUIButton[] setSameButton(int[] x, int[] y, ItemStack icon, GUIButtonExecute execute) {
 
-        if(x == null || y == null || x.length != y.length) {
-
-            throw new IllegalArgumentException("The two dimension coordinate argument exception.");
-        }
-        int[] slots = new int[x.length];
-
-        for(int i = 0; i < slots.length; i++) {
-
-            slots[i] = GUIUtil.getSlot(x[i], y[i]);
-        }
-        return setSameButton(slots, icon, execute);
+        return setSameClickButton(x, y, icon, GUIButtonClick.LEFT_CLICK, execute);
     }
 
     /**

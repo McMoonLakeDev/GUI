@@ -69,8 +69,8 @@ gui.open(player);
 
 // 如果 GUI 不需要的时候可以用对象来卸载或者用 manager 里面的卸载
 gui.unregister();
-manager.unregister(gui);
-manager.unregister("mygui");
+manager.unregisterGUI(gui);
+manager.unregisterGUI("mygui");
 ```
 ## 其他插件
 * `MoonLake` 核心 API 插件 :point_right:[GO](http://github.com/u2g/MoonLake "MoonLake Plugin")

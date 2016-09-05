@@ -46,7 +46,7 @@ public interface GUIButton {
     /**
      * 获取此按钮的图标对象
      *
-     * @return 图标
+     * @return 图标 没有则返回 null
      */
     ItemStack getIcon();
 

@@ -5,6 +5,7 @@ import com.minecraft.moonlake.gui.api.button.GUIButton;
 import com.minecraft.moonlake.gui.api.button.GUIButtonClick;
 import com.minecraft.moonlake.gui.api.button.GUIButtonExecute;
 import com.minecraft.moonlake.gui.api.button.GUIButtonWrapped;
+import com.minecraft.moonlake.manager.ItemManager;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -54,6 +55,7 @@ public class GUIButtonReference implements GUIButton {
      * 获取此按钮的执行对象
      *
      * @see GUIButtonReference#getExecute(GUIButtonClick)
+     * @return 默认点击类型的执行对象 没有则返回空执行对象
      */
     @Override
     @Deprecated
@@ -66,7 +68,8 @@ public class GUIButtonReference implements GUIButton {
     /**
      * 获取此按钮的执行对象
      *
-     * @param click 点击类型 没有则返回 null
+     * @param click 点击类型
+     * @return 指定点击类型的执行对象 没有则返回 null
      */
     @Override
     public GUIButtonExecute getExecute(GUIButtonClick click) {
@@ -90,12 +93,13 @@ public class GUIButtonReference implements GUIButton {
     /**
      * 获取此按钮的图标对象
      *
-     * @return 图标
+     * @return 图标 没有则返回 null
      */
     @Override
     public ItemStack getIcon() {
 
-        return gui.getItem(slot);
+        ItemStack icon = gui.getItem(slot);
+        return ItemManager.isAir(icon) ? null : icon;
     }
 
     /**

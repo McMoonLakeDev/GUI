@@ -299,6 +299,7 @@ public interface GUI {
      * @return GUI 的按钮对象
      * @throws com.minecraft.moonlake.gui.exception.IllegalGUIButtonOverflowException 如果无法再添加按钮则抛出异常
      */
+    @Deprecated
     GUIButton addClickButton();
 
     /**
