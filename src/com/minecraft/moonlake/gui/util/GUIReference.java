@@ -1058,7 +1058,7 @@ public class GUIReference implements GUI {
     @Deprecated
     public GUIButton setButton(int slot, ItemStack icon, GUIButtonExecute execute) {
 
-        return setClickButton(slot, icon, GUIButtonClick.LEFT_CLICK, execute);
+        return setClickButton(slot, icon, GUIButtonClick.ALL, execute);
     }
 
     /**
@@ -1094,7 +1094,7 @@ public class GUIReference implements GUI {
     @Deprecated
     public GUIButton[] setSameButton(int[] slots, ItemStack[] icons, GUIButtonExecute execute) {
 
-        return setSameClickButton(slots, icons, GUIButtonClick.LEFT_CLICK, execute);
+        return setSameClickButton(slots, icons, GUIButtonClick.ALL, execute);
     }
 
     /**
@@ -1111,7 +1111,7 @@ public class GUIReference implements GUI {
     @Deprecated
     public GUIButton[] setSameButton(int[] slots, ItemStack icon, GUIButtonExecute execute) {
 
-        return setSameClickButton(slots, icon, GUIButtonClick.LEFT_CLICK, execute);
+        return setSameClickButton(slots, icon, GUIButtonClick.ALL, execute);
     }
 
     /**
@@ -1130,7 +1130,7 @@ public class GUIReference implements GUI {
     @Deprecated
     public GUIButton[] setSameButton(int[] x, int[] y, ItemStack[] icons, GUIButtonExecute execute) {
 
-        return setSameClickButton(x, y, icons, GUIButtonClick.LEFT_CLICK, execute);
+        return setSameClickButton(x, y, icons, GUIButtonClick.ALL, execute);
     }
 
     /**
@@ -1149,7 +1149,7 @@ public class GUIReference implements GUI {
     @Deprecated
     public GUIButton[] setSameButton(int[] x, int[] y, ItemStack icon, GUIButtonExecute execute) {
 
-        return setSameClickButton(x, y, icon, GUIButtonClick.LEFT_CLICK, execute);
+        return setSameClickButton(x, y, icon, GUIButtonClick.ALL, execute);
     }
 
     /**
@@ -1241,7 +1241,7 @@ public class GUIReference implements GUI {
     @Deprecated
     public GUIButton addButton(ItemStack icon, GUIButtonExecute execute) {
 
-        return addClickButton(icon, GUIButtonClick.LEFT_CLICK, execute);
+        return addClickButton(icon, GUIButtonClick.ALL, execute);
     }
 
     /**

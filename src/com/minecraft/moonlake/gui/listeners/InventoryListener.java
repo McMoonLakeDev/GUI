@@ -102,31 +102,34 @@ public class InventoryListener implements Listener {
         }
         if(button == null) return;
 
-        GUIButtonExecute execute = null;
+        GUIButtonExecute execute = button.getExecute(GUIButtonClick.ALL);
 
-        if(guiClickType == GUIClickType.LEFT) {
+        if(execute == null) {
 
-            execute = button.getExecute(GUIButtonClick.LEFT_CLICK);
-        }
-        else if(guiClickType == GUIClickType.SHIFT_LEFT) {
+            if(guiClickType == GUIClickType.LEFT) {
 
-            execute = button.getExecute(GUIButtonClick.SHIFT_LEFT_CLICK);
-        }
-        else if(guiClickType == GUIClickType.RIGHT) {
+                execute = button.getExecute(GUIButtonClick.LEFT_CLICK);
+            }
+            else if(guiClickType == GUIClickType.SHIFT_LEFT) {
 
-            execute = button.getExecute(GUIButtonClick.RIGHT_CLICK);
-        }
-        else if(guiClickType == GUIClickType.SHIFT_RIGHT) {
+                execute = button.getExecute(GUIButtonClick.SHIFT_LEFT_CLICK);
+            }
+            else if(guiClickType == GUIClickType.RIGHT) {
 
-            execute = button.getExecute(GUIButtonClick.SHIFT_RIGHT_CLICK);
-        }
-        else if(guiClickType == GUIClickType.DOUBLE_CLICK) {
+                execute = button.getExecute(GUIButtonClick.RIGHT_CLICK);
+            }
+            else if(guiClickType == GUIClickType.SHIFT_RIGHT) {
 
-            execute = button.getExecute(GUIButtonClick.DOUBLE_CLICK);
-        }
-        else if(guiClickType == GUIClickType.MIDDLE) {
+                execute = button.getExecute(GUIButtonClick.SHIFT_RIGHT_CLICK);
+            }
+            else if(guiClickType == GUIClickType.DOUBLE_CLICK) {
 
-            execute = button.getExecute(GUIButtonClick.MIDDLE_CLICK);
+                execute = button.getExecute(GUIButtonClick.DOUBLE_CLICK);
+            }
+            else if(guiClickType == GUIClickType.MIDDLE) {
+
+                execute = button.getExecute(GUIButtonClick.MIDDLE_CLICK);
+            }
         }
         if(execute != null) {
 

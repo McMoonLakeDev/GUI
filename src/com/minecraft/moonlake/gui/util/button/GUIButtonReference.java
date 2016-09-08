@@ -37,7 +37,7 @@ public class GUIButtonReference implements GUIButton {
 
         this(gui, slot);
 
-        setClick(GUIButtonClick.LEFT_CLICK, execute);
+        setClick(GUIButtonClick.ALL, execute);
     }
 
     /**
@@ -61,7 +61,7 @@ public class GUIButtonReference implements GUIButton {
     @Deprecated
     public GUIButtonExecute getExecute() {
 
-        GUIButtonExecute execute = getExecute(GUIButtonClick.LEFT_CLICK);
+        GUIButtonExecute execute = getExecute(GUIButtonClick.ALL);
         return execute == null ? new GUIButtonExecuteNone() : execute;
     }
 
@@ -87,7 +87,7 @@ public class GUIButtonReference implements GUIButton {
     @Deprecated
     public void setExecute(GUIButtonExecute execute) {
 
-        setClick(GUIButtonClick.LEFT_CLICK, execute);
+        setClick(GUIButtonClick.ALL, execute);
     }
 
     /**

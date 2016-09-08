@@ -29,4 +29,9 @@ public enum GUIButtonClick {
      * GUI Button Click Type: Middle Click
      */
     MIDDLE_CLICK,
+    /**
+     * GUI Button Click Type: All
+     */
+    ALL,
+    ;
 }
