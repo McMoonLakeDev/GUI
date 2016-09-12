@@ -1,6 +1,8 @@
 package com.minecraft.moonlake.gui.api.button;
 
 import com.minecraft.moonlake.gui.api.GUI;
+import com.minecraft.moonlake.property.ReadOnlyIntegerProperty;
+import com.minecraft.moonlake.property.ReadOnlyObjectProperty;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
@@ -15,7 +17,7 @@ public interface GUIButton {
      *
      * @return GUI 对象
      */
-    GUI getGUI();
+    ReadOnlyObjectProperty<GUI> getGUI();
 
     /**
      * 获取此按钮的执行对象
@@ -55,7 +57,7 @@ public interface GUIButton {
      *
      * @return 索引
      */
-    int getSlot();
+    ReadOnlyIntegerProperty getSlot();
 
     /**
      * 设置此按钮的图标对象

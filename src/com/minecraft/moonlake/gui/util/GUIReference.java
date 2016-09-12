@@ -14,6 +14,7 @@ import com.minecraft.moonlake.gui.exception.IllegalGUISlotOutBoundException;
 import com.minecraft.moonlake.gui.manager.GUIUtil;
 import com.minecraft.moonlake.gui.util.button.GUIButtonExecuteNone;
 import com.minecraft.moonlake.gui.util.button.GUIButtonReference;
+import com.minecraft.moonlake.property.*;
 import com.minecraft.moonlake.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -28,14 +29,14 @@ import java.util.*;
  */
 public class GUIReference implements GUI {
 
-    private final String name;
-    private final String title;
-    private final int size;
+    private ReadOnlyStringProperty nameProperty;
+    private ReadOnlyStringProperty titleProperty;
+    private ReadOnlyIntegerProperty sizeProperty;
+    private ReadOnlyObjectProperty<Inventory> inventoryProperty;
     private final Map<Integer, GUIButton> buttonMap;
-    private final Inventory inventory;
 
-    private boolean allowMove;
-    private boolean closeToUnregister;
+    private BooleanProperty allowMoveProperty;
+    private BooleanProperty closeToUnregisterProperty;
 
     public GUIReference(String name, String title, int size) {
 
@@ -44,13 +45,13 @@ public class GUIReference implements GUI {
         size = GUIUtil.checkSize(size);
         size = size <= 6 ? size * 9 : size;
 
-        this.name = name;
-        this.size = size;
-        this.title = title;
-        this.allowMove = false;
-        this.closeToUnregister = false;
+        this.nameProperty = new SimpleStringProperty(name);
+        this.sizeProperty = new SimpleIntegerProperty(size);
+        this.titleProperty = new SimpleStringProperty(title);
+        this.allowMoveProperty = new SimpleBooleanProperty(false);
+        this.closeToUnregisterProperty = new SimpleBooleanProperty(false);
+        this.inventoryProperty = new SimpleObjectProperty<>(Bukkit.getServer().createInventory(null, size, title));
         this.buttonMap = new HashMap<>();
-        this.inventory = Bukkit.getServer().createInventory(null, size, title);
     }
 
     /**
@@ -59,9 +60,9 @@ public class GUIReference implements GUI {
      * @return 名称
      */
     @Override
-    public String getName() {
+    public ReadOnlyStringProperty getName() {
 
-        return name;
+        return nameProperty;
     }
 
     /**
@@ -70,9 +71,9 @@ public class GUIReference implements GUI {
      * @return 标题名称
      */
     @Override
-    public String getTitle() {
+    public ReadOnlyStringProperty getTitle() {
 
-        return title;
+        return titleProperty;
     }
 
     /**
@@ -81,9 +82,9 @@ public class GUIReference implements GUI {
      * @return 大小
      */
     @Override
-    public int getSize() {
+    public ReadOnlyIntegerProperty getSize() {
 
-        return size;
+        return sizeProperty;
     }
 
     /**
@@ -293,7 +294,7 @@ public class GUIReference implements GUI {
 
             throw new IllegalArgumentException("The button execute map object is null.");
         }
-        if(slot + 1 > size) {
+        if(slot + 1 > sizeProperty.get()) {
 
             throw new IllegalGUISlotOutBoundException();
         }
@@ -552,13 +553,13 @@ public class GUIReference implements GUI {
 
             throw new IllegalArgumentException("The button execute map object is null.");
         }
-        if(buttonMap.size() >= size) {
+        if(buttonMap.size() >= sizeProperty.get()) {
 
             throw new IllegalGUIButtonOverflowException();
         }
         int slot = -1;
 
-        for(int i = 0; i < size; i++) {
+        for(int i = 0; i < sizeProperty.get(); i++) {
 
             if(isButton(i)) {
 
@@ -1163,7 +1164,7 @@ public class GUIReference implements GUI {
     @Override
     public void setItem(int slot, ItemStack icon) {
 
-        if(slot + 1 > size) {
+        if(slot + 1 > sizeProperty.get()) {
 
             throw new IllegalGUISlotOutBoundException();
         }
@@ -1171,7 +1172,7 @@ public class GUIReference implements GUI {
 
             throw new IllegalGUIButtonConflictException();
         }
-        inventory.setItem(slot, icon);
+        inventoryProperty.get().setItem(slot, icon);
     }
 
     /**
@@ -1184,7 +1185,7 @@ public class GUIReference implements GUI {
     @Override
     public void setButtonIcon(int slot, ItemStack icon) {
 
-        if(slot + 1 > size) {
+        if(slot + 1 > sizeProperty.get()) {
 
             throw new IllegalGUISlotOutBoundException();
         }
@@ -1198,7 +1199,7 @@ public class GUIReference implements GUI {
 
             return;
         }
-        inventory.setItem(slot, icon);
+        inventoryProperty.get().setItem(slot, icon);
     }
 
     /**
@@ -1320,7 +1321,7 @@ public class GUIReference implements GUI {
     @Override
     public ItemStack getItem(int slot) {
 
-        return inventory.getItem(slot);
+        return inventoryProperty.get().getItem(slot);
     }
 
     /**
@@ -1333,7 +1334,7 @@ public class GUIReference implements GUI {
     @Override
     public ItemStack getItem(int x, int y) {
 
-        return inventory.getItem(GUIUtil.getSlot(x, y));
+        return inventoryProperty.get().getItem(GUIUtil.getSlot(x, y));
     }
 
     /**
@@ -1400,7 +1401,7 @@ public class GUIReference implements GUI {
     @Override
     public void clearItems() {
 
-        for(int i = 0; i < size; i++) {
+        for(int i = 0; i < sizeProperty.get(); i++) {
 
             if(!isButton(i)) {
 
@@ -1417,7 +1418,7 @@ public class GUIReference implements GUI {
 
         if(buttonMap.size() > 0) {
 
-            for (int i = 0; i < size; i++) {
+            for (int i = 0; i < sizeProperty.get(); i++) {
 
                 if (isButton(i)) {
 
@@ -1433,7 +1434,7 @@ public class GUIReference implements GUI {
     @Override
     public void clearAll() {
 
-        inventory.clear();
+        inventoryProperty.get().clear();
         buttonMap.clear();
     }
 
@@ -1450,7 +1451,7 @@ public class GUIReference implements GUI {
 
             throw new IllegalArgumentException("The open gui player object is null or not online.");
         }
-        player.openInventory(inventory);
+        player.openInventory(inventoryProperty.get());
     }
 
     /**
@@ -1475,9 +1476,9 @@ public class GUIReference implements GUI {
      * @return true 则允许 else 不允许
      */
     @Override
-    public boolean isAllowMove() {
+    public BooleanProperty getAllowMove() {
 
-        return allowMove;
+        return allowMoveProperty;
     }
 
     /**
@@ -1488,7 +1489,7 @@ public class GUIReference implements GUI {
     @Override
     public void setAllowMove(boolean flag) {
 
-        this.allowMove = flag;
+        this.allowMoveProperty.set(flag);
     }
 
     /**
@@ -1497,9 +1498,9 @@ public class GUIReference implements GUI {
      * @return true 则关闭后卸载 else 不卸载
      */
     @Override
-    public boolean isCloseToUnregister() {
+    public BooleanProperty getCloseToUnregister() {
 
-        return closeToUnregister;
+        return closeToUnregisterProperty;
     }
 
     /**
@@ -1510,13 +1511,13 @@ public class GUIReference implements GUI {
     @Override
     public void onCloseToUnregister(boolean flag) {
 
-        this.closeToUnregister = flag;
+        this.closeToUnregisterProperty.set(flag);
     }
 
     @Override
     public int hashCode() {
 
-        return getName().hashCode();
+        return nameProperty.get().hashCode();
     }
 
     @Override
@@ -1533,12 +1534,12 @@ public class GUIReference implements GUI {
         if(obj instanceof GUI) {
 
             GUI gui = (GUI) obj;
-            return gui.getName().equals(getName());
+            return gui.getName().get().equals(getName().get());
         }
         else if(obj instanceof Inventory) {
 
             Inventory guiBase = (Inventory) obj;
-            return guiBase.equals(inventory);
+            return guiBase.equals(inventoryProperty.get());
         }
         return false;
     }

@@ -6,6 +6,10 @@ import com.minecraft.moonlake.gui.api.button.GUIButtonClick;
 import com.minecraft.moonlake.gui.api.button.GUIButtonExecute;
 import com.minecraft.moonlake.gui.api.button.GUIButtonWrapped;
 import com.minecraft.moonlake.manager.ItemManager;
+import com.minecraft.moonlake.property.ReadOnlyIntegerProperty;
+import com.minecraft.moonlake.property.ReadOnlyObjectProperty;
+import com.minecraft.moonlake.property.SimpleIntegerProperty;
+import com.minecraft.moonlake.property.SimpleObjectProperty;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -16,8 +20,8 @@ import java.util.Map;
  */
 public class GUIButtonReference implements GUIButton {
 
-    private final GUI gui;
-    private final int slot;
+    private ReadOnlyObjectProperty<GUI> guiProperty;
+    private ReadOnlyIntegerProperty slotProperty;
     private final Map<GUIButtonClick, GUIButtonExecute> executeMap;
 
     public GUIButtonReference(GUI gui, int slot) {
@@ -27,8 +31,8 @@ public class GUIButtonReference implements GUIButton {
 
     public GUIButtonReference(GUI gui, int slot, Map<GUIButtonClick, GUIButtonExecute> executeMap) {
 
-        this.gui = gui;
-        this.slot = slot;
+        this.guiProperty = new SimpleObjectProperty<>(gui);
+        this.slotProperty = new SimpleIntegerProperty(slot);
         this.executeMap = executeMap == null ? new HashMap<>() : executeMap;
     }
 
@@ -46,9 +50,9 @@ public class GUIButtonReference implements GUIButton {
      * @return GUI 对象
      */
     @Override
-    public GUI getGUI() {
+    public ReadOnlyObjectProperty<GUI> getGUI() {
 
-        return gui;
+        return guiProperty;
     }
 
     /**
@@ -98,7 +102,7 @@ public class GUIButtonReference implements GUIButton {
     @Override
     public ItemStack getIcon() {
 
-        ItemStack icon = gui.getItem(slot);
+        ItemStack icon = guiProperty.get().getItem(slotProperty.get());
         return ItemManager.isAir(icon) ? null : icon;
     }
 
@@ -108,9 +112,9 @@ public class GUIButtonReference implements GUIButton {
      * @return 索引
      */
     @Override
-    public int getSlot() {
+    public ReadOnlyIntegerProperty getSlot() {
 
-        return slot;
+        return slotProperty;
     }
 
     /**
@@ -134,7 +138,7 @@ public class GUIButtonReference implements GUIButton {
     @Override
     public void updateIcon(ItemStack icon) {
 
-        gui.setButtonIcon(slot, icon);
+        guiProperty.get().setButtonIcon(slotProperty.get(), icon);
     }
 
     /**
@@ -143,7 +147,7 @@ public class GUIButtonReference implements GUIButton {
     @Override
     public void remove() {
 
-        gui.removeButton(slot);
+        guiProperty.get().removeButton(slotProperty.get());
     }
 
     /**
@@ -212,8 +216,8 @@ public class GUIButtonReference implements GUIButton {
 
             GUIButton guiButton = (GUIButton) obj;
 
-            return guiButton.getGUI().equals(getGUI()) &&
-                   guiButton.getSlot() == getSlot();
+            return guiButton.getGUI().isEqualTo(getGUI()).get() &&
+                   guiButton.getSlot().isEqualTo(getSlot()).get();
         }
         return false;
     }

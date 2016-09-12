@@ -62,7 +62,7 @@ public class InventoryListener implements Listener {
         MoonLakeGUICloseEvent mgce = new MoonLakeGUICloseEvent(gui, (Player)event.getPlayer());
         Bukkit.getServer().getPluginManager().callEvent(mgce);
 
-        if(gui.isCloseToUnregister()) {
+        if(gui.getCloseToUnregister().get()) {
 
             gui.unregister();
         }
@@ -87,12 +87,12 @@ public class InventoryListener implements Listener {
         GUIClickType guiClickType = GUIClickType.fromType(event.getClick().name());
         GUIButton button = gui.getButton(event.getSlot());
 
-        if(!gui.isAllowMove()) {
+        if(!gui.getAllowMove().get()) {
 
             event.setCancelled(true);
             event.setResult(Event.Result.DENY);
         }
-        if(gui.isAllowMove()) {
+        if(gui.getAllowMove().get()) {
 
             if(button != null || !guiClickType.isLeftOrRightClick()) {
 
@@ -133,7 +133,7 @@ public class InventoryListener implements Listener {
         }
         if(execute != null) {
 
-            MoonLakeGUIClickEvent mgce = new MoonLakeGUIClickEvent(gui, player, button.getSlot(), guiAction, guiClickType);
+            MoonLakeGUIClickEvent mgce = new MoonLakeGUIClickEvent(gui, player, button.getSlot().get(), guiAction, guiClickType);
             Bukkit.getServer().getPluginManager().callEvent(mgce);
 
             if(!mgce.isCancelled()) {
@@ -161,7 +161,7 @@ public class InventoryListener implements Listener {
 
         if(gui != null) {
 
-            if(gui.isAllowMove()) {
+            if(gui.getAllowMove().get()) {
 
                 if(event.getClick() == ClickType.LEFT || event.getClick() == ClickType.RIGHT) {
 
