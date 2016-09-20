@@ -15,6 +15,7 @@ import com.minecraft.moonlake.gui.util.button.GUIButtonExecuteNone;
 import com.minecraft.moonlake.gui.util.button.GUIButtonReference;
 import com.minecraft.moonlake.property.*;
 import com.minecraft.moonlake.util.StringUtil;
+import com.minecraft.moonlake.validate.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -226,10 +227,9 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton setClickButton(int slot, ItemStack icon, GUIButtonClick click, GUIButtonExecute execute) {
 
-        if(click == null || execute == null) {
+        Validate.notNull(click, "The button click object is null.");
+        Validate.notNull(execute, "The button execute object is null.");
 
-            throw new IllegalArgumentException("The button click or execute object is null.");
-        }
         return setClickButton(slot, icon, GUIUtil.wrappedToExecuteMap(click, execute));
     }
 
@@ -247,10 +247,8 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton setClickButton(int slot, ItemStack icon, GUIButtonWrapped wrapped) {
 
-        if(wrapped == null) {
+        Validate.notNull(wrapped, "The button wrapped object is null.");
 
-            throw new IllegalArgumentException("The button wrapped object is null.");
-        }
         return setClickButton(slot, icon, new GUIButtonWrapped[] { wrapped });
     }
 
@@ -268,10 +266,8 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton setClickButton(int slot, ItemStack icon, GUIButtonWrapped... wrapped) {
 
-        if(wrapped == null) {
+        Validate.notNull(wrapped, "The button wrapped object is null.");
 
-            throw new IllegalArgumentException("The button wrapped object is null.");
-        }
         return setClickButton(slot, icon, GUIUtil.wrappedToExecuteMap(wrapped));
     }
 
@@ -289,10 +285,8 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton setClickButton(int slot, ItemStack icon, Map<GUIButtonClick, GUIButtonExecute> executeMap) {
 
-        if(executeMap == null) {
+        Validate.notNull(executeMap, "The button execute map object is null.");
 
-            throw new IllegalArgumentException("The button execute map object is null.");
-        }
         if(slot + 1 > sizeProperty.get()) {
 
             throw new IllegalGUISlotOutBoundException();
@@ -490,10 +484,8 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton addClickButton(ItemStack icon, GUIButtonWrapped wrapped) {
 
-        if(wrapped == null) {
+        Validate.notNull(wrapped, "The button wrapped object is null.");
 
-            throw new IllegalArgumentException("The button wrapped object is null.");
-        }
         return addClickButton(icon, GUIUtil.wrappedToExecuteMap(wrapped));
     }
 
@@ -509,10 +501,8 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton addClickButton(ItemStack icon, GUIButtonWrapped[] wrapped) {
 
-        if(wrapped == null) {
+        Validate.notNull(wrapped, "The button wrapped object is null.");
 
-            throw new IllegalArgumentException("The button wrapped object is null.");
-        }
         return addClickButton(icon, GUIUtil.wrappedToExecuteMap(wrapped));
     }
 
@@ -529,10 +519,9 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton addClickButton(ItemStack icon, GUIButtonClick click, GUIButtonExecute execute) {
 
-        if(click == null || execute == null) {
+        Validate.notNull(click, "The button click object is null.");
+        Validate.notNull(execute, "The button execute object is null.");
 
-            throw new IllegalArgumentException("The button click or execute object is null.");
-        }
         return addClickButton(icon, GUIUtil.wrappedToExecuteMap(click, execute));
     }
 
@@ -548,10 +537,8 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton addClickButton(ItemStack icon, Map<GUIButtonClick, GUIButtonExecute> executeMap) {
 
-        if(executeMap == null) {
+        Validate.notNull(executeMap, "The button execute map object is null.");
 
-            throw new IllegalArgumentException("The button execute map object is null.");
-        }
         if(buttonMap.size() >= sizeProperty.get()) {
 
             throw new IllegalGUIButtonOverflowException();
@@ -589,10 +576,8 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton[] setSameClickButton(int[] slots, ItemStack icon, GUIButtonWrapped wrapped) {
 
-        if(wrapped == null) {
+        Validate.notNull(wrapped, "The button wrapped object is null.");
 
-            throw new IllegalArgumentException("The button wrapped object is null.");
-        }
         return setSameClickButton(slots, icon, GUIUtil.wrappedToExecuteMap(wrapped));
     }
 
@@ -610,10 +595,8 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton[] setSameClickButton(int[] slots, ItemStack icon, GUIButtonWrapped[] wrapped) {
 
-        if(wrapped == null) {
+        Validate.notNull(wrapped, "The button wrapped object is null.");
 
-            throw new IllegalArgumentException("The button wrapped object is null.");
-        }
         return setSameClickButton(slots, icon, GUIUtil.wrappedToExecuteMap(wrapped));
     }
 
@@ -632,10 +615,9 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton[] setSameClickButton(int[] slots, ItemStack icon, GUIButtonClick click, GUIButtonExecute execute) {
 
-        if(click == null || execute == null) {
+        Validate.notNull(click, "The button click object is null.");
+        Validate.notNull(execute, "The button execute object is null.");
 
-            throw new IllegalArgumentException("The button click or execute object is null.");
-        }
         return setSameClickButton(slots, icon, GUIUtil.wrappedToExecuteMap(click, execute));
     }
 
@@ -653,14 +635,9 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton[] setSameClickButton(int[] slots, ItemStack icon, Map<GUIButtonClick, GUIButtonExecute> executeMap) {
 
-        if(executeMap == null) {
+        Validate.notNull(executeMap, "The button execute map object is null.");
+        Validate.isTrue(slots != null && slots.length > 0, "The slot object exception.");
 
-            throw new IllegalArgumentException("The button execute map object is null.");
-        }
-        if(slots == null || slots.length <= 0) {
-
-            throw new IllegalArgumentException("The slot or icons argument exception.");
-        }
         GUIButton[] buttons = new GUIButton[slots.length];
 
         for(int i = 0; i < slots.length; i++) {
@@ -686,10 +663,8 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton[] setSameClickButton(int[] x, int[] y, ItemStack icon, GUIButtonWrapped wrapped) {
 
-        if(wrapped == null) {
+        Validate.notNull(wrapped, "The button wrapped object is null.");
 
-            throw new IllegalArgumentException("The button wrapped object is null.");
-        }
         return setSameClickButton(x, y, icon, GUIUtil.wrappedToExecuteMap(wrapped));
     }
 
@@ -709,10 +684,8 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton[] setSameClickButton(int[] x, int[] y, ItemStack icon, GUIButtonWrapped[] wrapped) {
 
-        if(wrapped == null) {
+        Validate.notNull(wrapped, "The button wrapped object is null.");
 
-            throw new IllegalArgumentException("The button wrapped object is null.");
-        }
         return setSameClickButton(x, y, icon, GUIUtil.wrappedToExecuteMap(wrapped));
     }
 
@@ -733,10 +706,9 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton[] setSameClickButton(int[] x, int[] y, ItemStack icon, GUIButtonClick click, GUIButtonExecute execute) {
 
-        if(click == null || execute == null) {
+        Validate.notNull(click, "The button click object is null.");
+        Validate.notNull(execute, "The button execute object is null.");
 
-            throw new IllegalArgumentException("The button click or execute object is null.");
-        }
         return setSameClickButton(x, y, icon, GUIUtil.wrappedToExecuteMap(click, execute));
     }
 
@@ -756,14 +728,10 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton[] setSameClickButton(int[] x, int[] y, ItemStack icon, Map<GUIButtonClick, GUIButtonExecute> executeMap) {
 
-        if(executeMap == null) {
+        Validate.notNull(executeMap, "The button execute map object is null.");
+        Validate.isTrue(x != null && y != null, "The two dimension coordinate argument exception.");
+        Validate.isTrue(x.length == y.length, "The two dimension coordinate argument exception.");
 
-            throw new IllegalArgumentException("The button execute map object is null.");
-        }
-        if(x == null || y == null || x.length != y.length) {
-
-            throw new IllegalArgumentException("The two dimension coordinate argument exception.");
-        }
         int[] slots = new int[x.length];
 
         for(int i = 0; i < slots.length; i++) {
@@ -787,10 +755,8 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton[] setSameClickButton(int[] slots, ItemStack[] icons, GUIButtonWrapped wrapped) {
 
-        if(wrapped == null) {
+        Validate.notNull(wrapped, "The button wrapped object is null.");
 
-            throw new IllegalArgumentException("The button wrapped object is null.");
-        }
         return setSameClickButton(slots, icons, GUIUtil.wrappedToExecuteMap(wrapped));
     }
 
@@ -808,10 +774,8 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton[] setSameClickButton(int[] slots, ItemStack[] icons, GUIButtonWrapped[] wrapped) {
 
-        if(wrapped == null) {
+        Validate.notNull(wrapped, "The button wrapped object is null.");
 
-            throw new IllegalArgumentException("The button wrapped object is null.");
-        }
         return setSameClickButton(slots, icons, GUIUtil.wrappedToExecuteMap(wrapped));
     }
 
@@ -830,10 +794,9 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton[] setSameClickButton(int[] slots, ItemStack[] icons, GUIButtonClick click, GUIButtonExecute execute) {
 
-        if(click == null || execute == null) {
+        Validate.notNull(click, "The button click object is null.");
+        Validate.notNull(execute, "The button execute object is null.");
 
-            throw new IllegalArgumentException("The button click or execute object is null.");
-        }
         return setSameClickButton(slots, icons, GUIUtil.wrappedToExecuteMap(click, execute));
     }
 
@@ -851,14 +814,9 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton[] setSameClickButton(int[] slots, ItemStack[] icons, Map<GUIButtonClick, GUIButtonExecute> executeMap) {
 
-        if(executeMap == null) {
+        Validate.notNull(executeMap, "The button execute map object is null.");
+        Validate.isTrue(slots != null && slots.length > 0 && icons != null, "The slot or icons argument exception.");
 
-            throw new IllegalArgumentException("The button execute map object is null.");
-        }
-        if(slots == null || slots.length <= 0 || icons == null) {
-
-            throw new IllegalArgumentException("The slot or icons argument exception.");
-        }
         List<ItemStack> icons0 = new ArrayList<>(Arrays.asList(icons));
 
         if(icons0.size() < slots.length) {
@@ -893,10 +851,8 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton[] setSameClickButton(int[] x, int[] y, ItemStack[] icons, GUIButtonWrapped wrapped) {
 
-        if(wrapped == null) {
+        Validate.notNull(wrapped, "The button wrapped object is null.");
 
-            throw new IllegalArgumentException("The button wrapped object is null.");
-        }
         return setSameClickButton(x, y, icons, GUIUtil.wrappedToExecuteMap(wrapped));
     }
 
@@ -916,10 +872,8 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton[] setSameClickButton(int[] x, int[] y, ItemStack[] icons, GUIButtonWrapped[] wrapped) {
 
-        if(wrapped == null) {
+        Validate.notNull(wrapped, "The button wrapped object is null.");
 
-            throw new IllegalArgumentException("The button wrapped object is null.");
-        }
         return setSameClickButton(x, y, icons, GUIUtil.wrappedToExecuteMap(wrapped));
     }
 
@@ -940,10 +894,9 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton[] setSameClickButton(int[] x, int[] y, ItemStack[] icons, GUIButtonClick click, GUIButtonExecute execute) {
 
-        if(click == null || execute == null) {
+        Validate.notNull(click, "The button click object is null.");
+        Validate.notNull(execute, "The button execute object is null.");
 
-            throw new IllegalArgumentException("The button click or execute object is null.");
-        }
         return setSameClickButton(x, y, icons, GUIUtil.wrappedToExecuteMap(click, execute));
     }
 
@@ -963,14 +916,10 @@ public class GUIReference implements GUI {
     @Override
     public GUIButton[] setSameClickButton(int[] x, int[] y, ItemStack[] icons, Map<GUIButtonClick, GUIButtonExecute> executeMap) {
 
-        if(executeMap == null) {
+        Validate.notNull(executeMap, "The button execute map object is null.");
+        Validate.isTrue(x != null && y != null, "The two dimension coordinate argument exception.");
+        Validate.isTrue(x.length == y.length, "The two dimension coordinate argument exception.");
 
-            throw new IllegalArgumentException("The button execute map object is null.");
-        }
-        if(x == null || y == null || x.length != y.length) {
-
-            throw new IllegalArgumentException("The two dimension coordinate argument exception.");
-        }
         int[] slots = new int[x.length];
 
         for(int i = 0; i < slots.length; i++) {
@@ -1446,10 +1395,8 @@ public class GUIReference implements GUI {
     @Override
     public void open(Player player) {
 
-        if(player == null || !player.isOnline()) {
+        Validate.isTrue(player != null && player.isOnline(), "The open gui player object is null or not online.");
 
-            throw new IllegalArgumentException("The open gui player object is null or not online.");
-        }
         player.openInventory(inventoryProperty.get());
     }
 
@@ -1462,10 +1409,8 @@ public class GUIReference implements GUI {
     @Override
     public void open(MoonLakePlayer player) {
 
-        if(player == null) {
+        Validate.isTrue(player != null, "The open gui player object is null.");
 
-            throw new IllegalArgumentException("The open gui player object is null.");
-        }
         open(player.getBukkitPlayer());
     }
 

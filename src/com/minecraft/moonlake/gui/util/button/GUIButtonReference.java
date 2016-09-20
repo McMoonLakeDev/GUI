@@ -10,6 +10,7 @@ import com.minecraft.moonlake.property.ReadOnlyIntegerProperty;
 import com.minecraft.moonlake.property.ReadOnlyObjectProperty;
 import com.minecraft.moonlake.property.SimpleIntegerProperty;
 import com.minecraft.moonlake.property.SimpleObjectProperty;
+import com.minecraft.moonlake.validate.Validate;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -160,10 +161,9 @@ public class GUIButtonReference implements GUIButton {
     @Override
     public void setClick(GUIButtonClick click, GUIButtonExecute execute) {
 
-        if(click == null || execute == null) {
+        Validate.notNull(click, "The button click object is null.");
+        Validate.notNull(execute, "The button execute object is null.");
 
-            throw new IllegalArgumentException("The button click or execute object is null.");
-        }
         executeMap.put(click, execute);
     }
 
@@ -176,10 +176,8 @@ public class GUIButtonReference implements GUIButton {
     @Override
     public void setClick(GUIButtonWrapped wrapped) {
 
-        if(wrapped == null) {
+        Validate.notNull(wrapped, "The button wrapped object is null.");
 
-            throw new IllegalArgumentException("The button wrapped object is null.");
-        }
         setClick(wrapped.getClick(), wrapped.getExecute());
     }
 
