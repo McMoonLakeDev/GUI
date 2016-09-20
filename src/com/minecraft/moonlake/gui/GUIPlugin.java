@@ -3,6 +3,7 @@ package com.minecraft.moonlake.gui;
 import com.minecraft.moonlake.MoonLakePlugin;
 import com.minecraft.moonlake.gui.api.MoonLakeGUI;
 import com.minecraft.moonlake.gui.api.MoonLakeGUIManager;
+import com.minecraft.moonlake.gui.listeners.InventoryListener;
 import com.minecraft.moonlake.gui.manager.GUIManager;
 import com.minecraft.moonlake.logger.MLogger;
 import com.minecraft.moonlake.logger.MLoggerWrapped;
@@ -35,6 +36,9 @@ public class GUIPlugin extends JavaPlugin implements MoonLakeGUI {
             return;
         }
         manager = new GUIManager(getInstance());
+
+        this.getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
+        this.getMLogger().info("月色之湖 GUI 插件 v" + getDescription().getVersion() + " 成功加载.");
     }
 
     @Override
