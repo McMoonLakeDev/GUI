@@ -1,6 +1,5 @@
 package com.minecraft.moonlake.gui.util;
 
-import com.minecraft.moonlake.api.itemlib.ItemBuilder;
 import com.minecraft.moonlake.api.player.MoonLakePlayer;
 import com.minecraft.moonlake.gui.GUIPlugin;
 import com.minecraft.moonlake.gui.api.GUI;
@@ -15,7 +14,7 @@ import com.minecraft.moonlake.gui.manager.GUIUtil;
 import com.minecraft.moonlake.gui.util.button.GUIButtonExecuteNone;
 import com.minecraft.moonlake.gui.util.button.GUIButtonReference;
 import com.minecraft.moonlake.property.*;
-import com.minecraft.moonlake.util.Util;
+import com.minecraft.moonlake.util.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -41,7 +40,7 @@ public class GUIReference implements GUI {
     public GUIReference(String name, String title, int size) {
 
         // changed color text and check size
-        title = Util.color(title);
+        title = StringUtil.toColor(title).get();
         size = GUIUtil.checkSize(size);
         size = size <= 6 ? size * 9 : size;
 
@@ -1349,7 +1348,7 @@ public class GUIReference implements GUI {
 
             return;
         }
-        setItem(slot, new ItemBuilder(Material.AIR).build());
+        setItem(slot, new ItemStack(Material.AIR));
     }
 
     /**
@@ -1377,7 +1376,7 @@ public class GUIReference implements GUI {
 
             return null;
         }
-        setItem(slot, new ItemBuilder(Material.AIR).build());
+        setItem(slot, new ItemStack(Material.AIR));
 
         return buttonMap.remove(slot);
     }

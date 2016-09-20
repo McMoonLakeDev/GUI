@@ -15,11 +15,6 @@ public class IllegalGUIButtonConflictException extends IllegalGUIException {
         super(message);
     }
 
-    public IllegalGUIButtonConflictException(Throwable t) {
-
-        super(t);
-    }
-
     public IllegalGUIButtonConflictException(String message, Throwable t) {
 
         super(message, t);

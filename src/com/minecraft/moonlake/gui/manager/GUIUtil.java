@@ -1,6 +1,6 @@
 package com.minecraft.moonlake.gui.manager;
 
-import com.minecraft.moonlake.api.itemlib.ItemBuilder;
+import com.minecraft.moonlake.api.item.ItemLibraryFactorys;
 import com.minecraft.moonlake.gui.api.button.GUIButtonClick;
 import com.minecraft.moonlake.gui.api.button.GUIButtonExecute;
 import com.minecraft.moonlake.gui.api.button.GUIButtonWrapped;
@@ -20,7 +20,7 @@ public final class GUIUtil {
 
     static {
 
-        DEFAULT_ICON = new ItemBuilder(Material.BEDROCK, 0, ChatColor.GRAY + "GUI DEFAULT ICON").build();
+        DEFAULT_ICON = ItemLibraryFactorys.itemBuilder(Material.BEDROCK, 0, 1, ChatColor.GRAY + "GUI DEFAULT ICON").build();
     }
 
     /**

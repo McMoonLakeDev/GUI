@@ -15,11 +15,6 @@ public class IllegalGUISlotOutBoundException extends IllegalGUIException {
         super(message);
     }
 
-    public IllegalGUISlotOutBoundException(Throwable t) {
-
-        super(t);
-    }
-
     public IllegalGUISlotOutBoundException(String message, Throwable t) {
 
         super(message, t);

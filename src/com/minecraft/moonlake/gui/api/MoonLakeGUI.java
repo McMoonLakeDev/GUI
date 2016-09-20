@@ -1,7 +1,7 @@
 package com.minecraft.moonlake.gui.api;
 
-import com.minecraft.moonlake.api.MLogger;
 import com.minecraft.moonlake.gui.GUIPlugin;
+import com.minecraft.moonlake.logger.MLogger;
 
 /**
  * Created by MoonLake on 2016/7/24.

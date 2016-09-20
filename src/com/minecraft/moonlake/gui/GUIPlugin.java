@@ -1,15 +1,16 @@
 package com.minecraft.moonlake.gui;
 
 import com.minecraft.moonlake.MoonLakePlugin;
-import com.minecraft.moonlake.api.MLogger;
 import com.minecraft.moonlake.gui.api.MoonLakeGUI;
 import com.minecraft.moonlake.gui.api.MoonLakeGUIManager;
 import com.minecraft.moonlake.gui.manager.GUIManager;
+import com.minecraft.moonlake.logger.MLogger;
+import com.minecraft.moonlake.logger.MLoggerWrapped;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * Created by MoonLake on 2016/7/24.
+ * <h1>Minecraft MoonLake GUI Plugin</h1>
  */
 public class GUIPlugin extends JavaPlugin implements MoonLakeGUI {
 
@@ -19,7 +20,7 @@ public class GUIPlugin extends JavaPlugin implements MoonLakeGUI {
 
     public GUIPlugin() {
 
-        this.mLogger = new MLogger.Wrapped("MoonLakeGUI");
+        this.mLogger = new MLoggerWrapped("MoonLakeGUI");
     }
 
     @Override

@@ -15,11 +15,6 @@ public class IllegalGUIButtonOverflowException extends IllegalGUIException {
         super(message);
     }
 
-    public IllegalGUIButtonOverflowException(Throwable t) {
-
-        super(t);
-    }
-
     public IllegalGUIButtonOverflowException(String message, Throwable t) {
 
         super(message, t);

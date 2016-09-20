@@ -1,9 +1,11 @@
 package com.minecraft.moonlake.gui.exception;
 
+import com.minecraft.moonlake.exception.MoonLakeException;
+
 /**
  * Created by MoonLake on 2016/7/24.
  */
-public class IllegalGUIException extends RuntimeException {
+public class IllegalGUIException extends MoonLakeException {
 
     public IllegalGUIException() {
 
@@ -13,11 +15,6 @@ public class IllegalGUIException extends RuntimeException {
     public IllegalGUIException(String message) {
 
         super(message);
-    }
-
-    public IllegalGUIException(Throwable t) {
-
-        super(t);
     }
 
     public IllegalGUIException(String message, Throwable t) {

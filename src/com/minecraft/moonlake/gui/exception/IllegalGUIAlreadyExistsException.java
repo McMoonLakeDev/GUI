@@ -15,11 +15,6 @@ public class IllegalGUIAlreadyExistsException extends IllegalGUIException {
         super(message);
     }
 
-    public IllegalGUIAlreadyExistsException(Throwable t) {
-
-        super(t);
-    }
-
     public IllegalGUIAlreadyExistsException(String message, Throwable t) {
 
         super(message, t);
