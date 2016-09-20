@@ -1459,13 +1459,13 @@ public class GUIReference implements GUI {
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
 
         return nameProperty.get().hashCode();
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public final boolean equals(Object obj) {
 
         if(obj == null) {
 

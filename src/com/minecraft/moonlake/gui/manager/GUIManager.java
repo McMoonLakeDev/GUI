@@ -46,7 +46,7 @@ public final class GUIManager implements MoonLakeGUIManager {
      * @return GUI 对象
      */
     @Override
-    public <T extends GUI> GUI createGUI(String name, String title, int size) {
+    public GUI createGUI(String name, String title, int size) {
 
         return new GUIReference(name, title, size);
     }
@@ -80,7 +80,7 @@ public final class GUIManager implements MoonLakeGUIManager {
 
             return null;
         }
-        GUI_MAP.remove(gui.getName());
+        GUI_MAP.remove(gui.getName().get());
 
         return gui;
     }
@@ -89,10 +89,9 @@ public final class GUIManager implements MoonLakeGUIManager {
      * 卸载指定 GUI 对象
      *
      * @param name GUI 名称
-     * @param <T> GUI 对象
      * @return GUI 对象 没有则返回 null
      */
-    public <T extends GUI> GUI unregisterGUI(String name) {
+    public GUI unregisterGUI(String name) {
 
         GUI gui = getGUI(name);
 
@@ -100,7 +99,7 @@ public final class GUIManager implements MoonLakeGUIManager {
 
             return null;
         }
-        GUI_MAP.remove(gui.getName());
+        GUI_MAP.remove(gui.getName().get());
 
         return gui;
     }
@@ -121,10 +120,9 @@ public final class GUIManager implements MoonLakeGUIManager {
      * 获取指定名称的 GUI 对象
      *
      * @param gui GUI 对象
-     * @param <T> GUI 对象
      * @return GUI 对象 没有则返回 null
      */
-    public <T extends GUI> GUI getGUI(GUI gui) {
+    public GUI getGUI(GUI gui) {
 
         return gui != null ? getGUI(gui.getName().get()) : null;
     }
@@ -135,7 +133,7 @@ public final class GUIManager implements MoonLakeGUIManager {
      * @param name GUI 名称
      * @return GUI 对象 没有则返回 null
      */
-    public <T extends GUI> GUI getGUI(String name) {
+    public GUI getGUI(String name) {
 
         return hasGUI(name) ? GUI_MAP.get(name) : null;
     }
