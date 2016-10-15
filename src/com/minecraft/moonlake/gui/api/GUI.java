@@ -6,8 +6,6 @@ import com.minecraft.moonlake.gui.api.button.GUIButtonClick;
 import com.minecraft.moonlake.gui.api.button.GUIButtonExecute;
 import com.minecraft.moonlake.gui.api.button.GUIButtonWrapped;
 import com.minecraft.moonlake.property.BooleanProperty;
-import com.minecraft.moonlake.property.ReadOnlyIntegerProperty;
-import com.minecraft.moonlake.property.ReadOnlyStringProperty;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -24,21 +22,21 @@ public interface GUI {
      *
      * @return 名称
      */
-    ReadOnlyStringProperty getName();
+    String getName();
 
     /**
      * 获取此 GUI 对象的标题名称
      *
      * @return 标题名称
      */
-    ReadOnlyStringProperty getTitle();
+    String getTitle();
 
     /**
      * 获取此 GUI 对象的大小
      *
      * @return 大小
      */
-    ReadOnlyIntegerProperty getSize();
+    int getSize();
 
     /**
      * 创建指定索引为按钮对象
@@ -894,7 +892,7 @@ public interface GUI {
      *
      * @return true 则允许 else 不允许
      */
-    BooleanProperty getAllowMove();
+    boolean isAllowMove();
 
     /**
      * 设置此 GUI 对象是否允许移动物品
@@ -908,7 +906,7 @@ public interface GUI {
      *
      * @return true 则关闭后卸载 else 不卸载
      */
-    BooleanProperty getCloseToUnregister();
+    boolean isCloseToUnregister();
 
     /**
      * 设置此 GUI 对象是否将关闭后从对象集合卸载

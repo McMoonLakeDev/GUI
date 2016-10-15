@@ -41,7 +41,7 @@ public class GUIReference implements GUI {
     public GUIReference(String name, String title, int size) {
 
         // changed color text and check size
-        title = StringUtil.toColor(title).get();
+        title = StringUtil.toColor(title);
         size = GUIUtil.checkSize(size);
         size = size <= 6 ? size * 9 : size;
 
@@ -60,9 +60,9 @@ public class GUIReference implements GUI {
      * @return 名称
      */
     @Override
-    public ReadOnlyStringProperty getName() {
+    public String getName() {
 
-        return nameProperty;
+        return nameProperty.get();
     }
 
     /**
@@ -71,9 +71,9 @@ public class GUIReference implements GUI {
      * @return 标题名称
      */
     @Override
-    public ReadOnlyStringProperty getTitle() {
+    public String getTitle() {
 
-        return titleProperty;
+        return titleProperty.get();
     }
 
     /**
@@ -82,9 +82,9 @@ public class GUIReference implements GUI {
      * @return 大小
      */
     @Override
-    public ReadOnlyIntegerProperty getSize() {
+    public int getSize() {
 
-        return sizeProperty;
+        return sizeProperty.get();
     }
 
     /**
@@ -1420,9 +1420,9 @@ public class GUIReference implements GUI {
      * @return true 则允许 else 不允许
      */
     @Override
-    public BooleanProperty getAllowMove() {
+    public boolean isAllowMove() {
 
-        return allowMoveProperty;
+        return allowMoveProperty.get();
     }
 
     /**
@@ -1442,9 +1442,9 @@ public class GUIReference implements GUI {
      * @return true 则关闭后卸载 else 不卸载
      */
     @Override
-    public BooleanProperty getCloseToUnregister() {
+    public boolean isCloseToUnregister() {
 
-        return closeToUnregisterProperty;
+        return closeToUnregisterProperty.get();
     }
 
     /**
@@ -1478,7 +1478,7 @@ public class GUIReference implements GUI {
         if(obj instanceof GUI) {
 
             GUI gui = (GUI) obj;
-            return gui.getName().get().equals(getName().get());
+            return gui.getName().equals(getName());
         }
         else if(obj instanceof Inventory) {
 
