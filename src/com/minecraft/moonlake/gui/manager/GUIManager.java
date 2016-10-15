@@ -64,7 +64,7 @@ public final class GUIManager implements MoonLakeGUIManager {
 
             throw new IllegalGUIAlreadyExistsException();
         }
-        GUI_MAP.put(gui.getName().get(), gui);
+        GUI_MAP.put(gui.getName(), gui);
     }
 
     /**
@@ -80,7 +80,7 @@ public final class GUIManager implements MoonLakeGUIManager {
 
             return null;
         }
-        GUI_MAP.remove(gui.getName().get());
+        GUI_MAP.remove(gui.getName());
 
         return gui;
     }
@@ -99,7 +99,7 @@ public final class GUIManager implements MoonLakeGUIManager {
 
             return null;
         }
-        GUI_MAP.remove(gui.getName().get());
+        GUI_MAP.remove(gui.getName());
 
         return gui;
     }
@@ -124,7 +124,7 @@ public final class GUIManager implements MoonLakeGUIManager {
      */
     public GUI getGUI(GUI gui) {
 
-        return gui != null ? getGUI(gui.getName().get()) : null;
+        return gui != null ? getGUI(gui.getName()) : null;
     }
 
     /**
@@ -146,7 +146,7 @@ public final class GUIManager implements MoonLakeGUIManager {
      */
     public boolean hasGUI(GUI gui) {
 
-        return gui != null && hasGUI(gui.getName().get());
+        return gui != null && hasGUI(gui.getName());
     }
 
     /**
