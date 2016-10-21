@@ -19,11 +19,12 @@
 package com.minecraft.moonlake.gui.api;
 
 import com.minecraft.moonlake.api.player.MoonLakePlayer;
+import com.minecraft.moonlake.execute.Execute;
 import com.minecraft.moonlake.gui.api.button.GUIButton;
 import com.minecraft.moonlake.gui.api.button.GUIButtonClick;
 import com.minecraft.moonlake.gui.api.button.GUIButtonExecute;
 import com.minecraft.moonlake.gui.api.button.GUIButtonWrapped;
-import com.minecraft.moonlake.property.BooleanProperty;
+import com.minecraft.moonlake.property.ObjectProperty;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -932,6 +933,16 @@ public interface GUI {
      * @param flag true 则关闭后卸载 else 不卸载
      */
     void onCloseToUnregister(boolean flag);
+
+    /**
+     * 获取此 GUI 对象打开后的执行器属性对象
+     */
+    ObjectProperty<Execute<GUIEventHandler>> getOpenExecute();
+
+    /**
+     * 获取此 GUI 对象关闭后的执行器属性对象
+     */
+    ObjectProperty<Execute<GUIEventHandler>> getCloseExecute();
 
     /**
      * 获取此 GUI 对象是否符合目标对象

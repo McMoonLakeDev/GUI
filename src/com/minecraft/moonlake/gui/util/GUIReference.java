@@ -19,8 +19,10 @@
 package com.minecraft.moonlake.gui.util;
 
 import com.minecraft.moonlake.api.player.MoonLakePlayer;
+import com.minecraft.moonlake.execute.Execute;
 import com.minecraft.moonlake.gui.GUIPlugin;
 import com.minecraft.moonlake.gui.api.GUI;
+import com.minecraft.moonlake.gui.api.GUIEventHandler;
 import com.minecraft.moonlake.gui.api.button.GUIButton;
 import com.minecraft.moonlake.gui.api.button.GUIButtonClick;
 import com.minecraft.moonlake.gui.api.button.GUIButtonExecute;
@@ -55,6 +57,8 @@ public class GUIReference implements GUI {
 
     private BooleanProperty allowMoveProperty;
     private BooleanProperty closeToUnregisterProperty;
+    private ObjectProperty<Execute<GUIEventHandler>> openHandlerExecuteProperty;
+    private ObjectProperty<Execute<GUIEventHandler>> closeHandlerExecuteProperty;
 
     public GUIReference(String name, String title, int size) {
 
@@ -69,6 +73,8 @@ public class GUIReference implements GUI {
         this.allowMoveProperty = new SimpleBooleanProperty(false);
         this.closeToUnregisterProperty = new SimpleBooleanProperty(false);
         this.inventoryProperty = new SimpleObjectProperty<>(Bukkit.getServer().createInventory(null, size, title));
+        this.openHandlerExecuteProperty = new SimpleObjectProperty<>(null);
+        this.closeHandlerExecuteProperty = new SimpleObjectProperty<>(null);
         this.buttonMap = new HashMap<>();
     }
 
@@ -1474,6 +1480,24 @@ public class GUIReference implements GUI {
     public void onCloseToUnregister(boolean flag) {
 
         this.closeToUnregisterProperty.set(flag);
+    }
+
+    /**
+     * 获取此 GUI 对象打开后的执行器属性对象
+     */
+    @Override
+    public ObjectProperty<Execute<GUIEventHandler>> getOpenExecute() {
+
+        return openHandlerExecuteProperty;
+    }
+
+    /**
+     * 获取此 GUI 对象关闭后的执行器属性对象
+     */
+    @Override
+    public ObjectProperty<Execute<GUIEventHandler>> getCloseExecute() {
+
+        return closeHandlerExecuteProperty;
     }
 
     @Override

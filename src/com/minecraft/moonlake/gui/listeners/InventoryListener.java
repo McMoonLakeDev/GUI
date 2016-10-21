@@ -18,10 +18,8 @@
  
 package com.minecraft.moonlake.gui.listeners;
 
-import com.minecraft.moonlake.gui.api.GUI;
-import com.minecraft.moonlake.gui.api.GUIAction;
-import com.minecraft.moonlake.gui.api.GUIClickType;
-import com.minecraft.moonlake.gui.api.MoonLakeGUI;
+import com.minecraft.moonlake.execute.Execute;
+import com.minecraft.moonlake.gui.api.*;
 import com.minecraft.moonlake.gui.api.button.GUIButton;
 import com.minecraft.moonlake.gui.api.button.GUIButtonClick;
 import com.minecraft.moonlake.gui.api.button.GUIButtonExecute;
@@ -63,10 +61,20 @@ public class InventoryListener implements Listener {
         if(gui == null) return;
         if(!(event.getPlayer() instanceof Player)) return;
 
-        MoonLakeGUIOpenEvent mgoe = new MoonLakeGUIOpenEvent(gui, (Player)event.getPlayer());
+        Player target = (Player) event.getPlayer();
+
+        MoonLakeGUIOpenEvent mgoe = new MoonLakeGUIOpenEvent(gui, target);
         Bukkit.getServer().getPluginManager().callEvent(mgoe);
+
+        Execute<GUIEventHandler> openHandlerExecute = gui.getOpenExecute().get();
+
+        if(openHandlerExecute != null) {
+
+            openHandlerExecute.onExecute(new GUIEventHandler(gui, target));
+        }
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onClose(InventoryCloseEvent event) {
 
@@ -77,9 +85,17 @@ public class InventoryListener implements Listener {
         if(gui == null) return;
         if(!(event.getPlayer() instanceof Player)) return;
 
-        MoonLakeGUICloseEvent mgce = new MoonLakeGUICloseEvent(gui, (Player)event.getPlayer());
+        Player target = (Player) event.getPlayer();
+
+        MoonLakeGUICloseEvent mgce = new MoonLakeGUICloseEvent(gui, target);
         Bukkit.getServer().getPluginManager().callEvent(mgce);
 
+        Execute<GUIEventHandler> closeHandlerExecute = gui.getCloseExecute().get();
+
+        if(closeHandlerExecute != null) {
+
+            closeHandlerExecute.onExecute(new GUIEventHandler(gui, target));
+        }
         if(gui.isCloseToUnregister()) {
 
             gui.unregister();
@@ -151,7 +167,7 @@ public class InventoryListener implements Listener {
         }
         if(execute != null) {
 
-            MoonLakeGUIClickEvent mgce = new MoonLakeGUIClickEvent(gui, player, button.getSlot().get(), guiAction, guiClickType);
+            MoonLakeGUIClickEvent mgce = new MoonLakeGUIClickEvent(gui, player, button.getSlot(), guiAction, guiClickType);
             Bukkit.getServer().getPluginManager().callEvent(mgce);
 
             if(!mgce.isCancelled()) {

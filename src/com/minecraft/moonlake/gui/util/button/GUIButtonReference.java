@@ -69,9 +69,9 @@ public class GUIButtonReference implements GUIButton {
      * @return GUI 对象
      */
     @Override
-    public ReadOnlyObjectProperty<GUI> getGUI() {
+    public GUI getGUI() {
 
-        return guiProperty;
+        return guiProperty.get();
     }
 
     /**
@@ -131,9 +131,9 @@ public class GUIButtonReference implements GUIButton {
      * @return 索引
      */
     @Override
-    public ReadOnlyIntegerProperty getSlot() {
+    public int getSlot() {
 
-        return slotProperty;
+        return slotProperty.get();
     }
 
     /**
@@ -232,8 +232,8 @@ public class GUIButtonReference implements GUIButton {
 
             GUIButton guiButton = (GUIButton) obj;
 
-            return guiButton.getGUI().isEqualTo(getGUI()).get() &&
-                   guiButton.getSlot().isEqualTo(getSlot()).get();
+            return guiButton.getGUI().equals(getGUI()) &&
+                   guiButton.getSlot() == getSlot();
         }
         return false;
     }
