@@ -1500,6 +1500,17 @@ public class GUIReference implements GUI {
         return closeHandlerExecuteProperty;
     }
 
+    /**
+     * 获取此 GUI 对象是否已经注册
+     *
+     * @return 是否已经注册
+     */
+    @Override
+    public boolean isRegistered() {
+
+        return GUIPlugin.getManagers().hasGUI(this);
+    }
+
     @Override
     public final int hashCode() {
 

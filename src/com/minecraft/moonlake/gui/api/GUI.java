@@ -945,6 +945,13 @@ public interface GUI {
     ObjectProperty<Execute<GUIEventHandler>> getCloseExecute();
 
     /**
+     * 获取此 GUI 对象是否已经注册
+     *
+     * @return 是否已经注册
+     */
+    boolean isRegistered();
+
+    /**
      * 获取此 GUI 对象是否符合目标对象
      *
      * @param obj 对象
