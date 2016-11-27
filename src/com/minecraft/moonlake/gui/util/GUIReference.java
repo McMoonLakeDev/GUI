@@ -38,6 +38,7 @@ import com.minecraft.moonlake.util.StringUtil;
 import com.minecraft.moonlake.validate.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -109,6 +110,26 @@ public class GUIReference implements GUI {
     public int getSize() {
 
         return sizeProperty.get();
+    }
+
+    /**
+     * 获取此 GUI 的查看者
+     *
+     * @return 查看者
+     */
+    @Override
+    public List<Player> getViewers() {
+
+        List<Player> viewerList = new ArrayList<>();
+
+        for(final HumanEntity entity : inventoryProperty.get().getViewers()) {
+
+            if(entity instanceof Player) {
+
+                viewerList.add((Player) entity);
+            }
+        }
+        return viewerList;
     }
 
     /**
@@ -1558,6 +1579,13 @@ public class GUIReference implements GUI {
     @Deprecated
     public void unregister() {
 
+        for(final Player player : getViewers()) {
+
+            if(player != null) {
+
+                player.closeInventory();
+            }
+        }
         GUIPlugin.getManagers().unregisterGUI(this);
     }
 }

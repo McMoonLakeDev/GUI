@@ -28,6 +28,7 @@ import com.minecraft.moonlake.property.ObjectProperty;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -56,6 +57,13 @@ public interface GUI {
      * @return 大小
      */
     int getSize();
+
+    /**
+     * 获取此 GUI 的查看者
+     *
+     * @return 查看者
+     */
+    List<Player> getViewers();
 
     /**
      * 创建指定索引为按钮对象
