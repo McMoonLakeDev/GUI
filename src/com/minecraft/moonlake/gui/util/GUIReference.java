@@ -1579,9 +1579,20 @@ public class GUIReference implements GUI {
     @Deprecated
     public void unregister() {
 
+        unregister(null);
+    }
+
+    /**
+     * 将次 GUI 对象从对象集合卸载
+     *
+     * @param closer 关闭者
+     */
+    @Override
+    public void unregister(Player closer) {
+
         for(final Player player : getViewers()) {
 
-            if(player != null) {
+            if(player != null && !player.equals(closer)) {
 
                 player.closeInventory();
             }

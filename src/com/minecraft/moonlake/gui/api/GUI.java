@@ -978,4 +978,10 @@ public interface GUI {
      */
     @Deprecated
     void unregister();
+
+    /**
+     * 将次 GUI 对象从对象集合卸载
+     * @param closer 关闭者
+     */
+    void unregister(Player closer);
 }

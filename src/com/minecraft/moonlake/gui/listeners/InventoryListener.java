@@ -98,7 +98,7 @@ public class InventoryListener implements Listener {
         }
         if(gui.isCloseToUnregister()) {
 
-            gui.unregister();
+            gui.unregister(target);
         }
     }
 
