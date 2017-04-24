@@ -6,7 +6,7 @@ By Month_Light
 极其简单的 GUI 操作方法，为您呈现用户图形化界面。
 
 ## v2.0
-此分支将会把功能完全重做, 旧版本依赖请查看 dev-main 分支内容.
+此分支将会把功能完全重做, 旧版本依赖请查看 [dev-main](https://github.com/McMoonLakeDev/GUI/tree/dev-main) 分支内容.
 
 ## 其他插件
 * `MoonLake` 核心 API 插件 :point_right:[GO](http://github.com/u2g/MoonLake "MoonLake Plugin")
