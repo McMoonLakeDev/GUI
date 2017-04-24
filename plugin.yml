@@ -1,8 +1,0 @@
-name: MoonLakeGUI
-main: com.minecraft.moonlake.gui.GUIPlugin
-version: 1.5.4
-author: Month_Light
-website: http://www.mcyszh.com
-
-# depend: MoonLake 1.8 for override: https://github.com/u2g/MoonLake
-depend: [MoonLake]

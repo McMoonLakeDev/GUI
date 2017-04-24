@@ -4,74 +4,10 @@ By Month_Light
 ## 简介
 这个插件提供了创建 GUI 以及设置按钮交互操作<br />
 极其简单的 GUI 操作方法，为您呈现用户图形化界面。
-## 未来计划
-* 这是我们未来即将开发的 API 功能
-* 1. 更多按钮的封装
-* 2. 更多 GUI 的类型封装
-* 3. 添加对 MySQL 的支持
 
-## 使用方法
-注意将您的插件内 `plugin.yml` 添加 `depend: [MoonLakeGUI]` 前置支持
-```java
-private MoonLakeGUIManager manager;
+## v2.0
+此分支将会把功能完全重做, 旧版本依赖请查看 dev-main 分支内容.
 
-/**
- * 加载月色之湖前置 GUI 插件
- *
- * @return 是否加载成功
- */
-private boolean setupMoonLakeGUI() {
-
-  Plugin plugin = this.getServer().getPluginManager().getPlugin("MoonLakeGUI");
-  return plugin != null && plugin instanceof GUIPlugin && (this.manager = ((GUIPlugin)plugin).getManager()) != null;
-}
-```
-调用的话就在主类的 `onEnable` 函数里面
-```java
-@Override
-public void onEnable() {
-
-  if(!setupMoonLakeGUI()) {
-    // 前置插件 MoonLakeGUI 加载失败
-    return;
-  }
-  // 前置插件 MoonLakeGUI 加载成功
-}
-```
-新建一个 GUI 对象并添加按钮行为以及注册
-```java
-// 创建 GUI
-GUI gui = manager.createGUI("mygui", "这是我创建的GUI", 6);
-
-// 创建按钮
-GUIButton guiButton = gui.createButton(5, 3, new ItemStack(Material.DIAMOND));
-guiButton.setClick(GUIButtonClick.LEFT_CLICK, new GUIButtonExecute() {
-    @Override
-    public void execute(GUI gui, Player clicked, GUIButton currentButton) {
-        clicked.closeInventory();
-        clicked.sendMessage("你用鼠标左键点了一下这个按钮 23333");
-    }
-});
-// 支持多种交互方式
-guiButton.setClick(GUIButtonClick.SHIFT_RIGHT_CLICK, new GUIButtonExecute() {
-    @Override
-    public void execute(GUI gui, Player clicked, GUIButton currentButton) {
-        clicked.closeInventory();
-        clicked.sendMessage("你又用 Shift + 鼠标右键点了一下这个按钮 23333");
-    }
-});
-
-// 记着一定要注册你创建的 GUI 对象
-gui.register();
-
-// 给一个玩家打开此 GUI 对象
-gui.open(player);
-
-// 如果 GUI 不需要的时候可以用对象来卸载或者用 manager 里面的卸载
-gui.unregister();
-manager.unregisterGUI(gui);
-manager.unregisterGUI("mygui");
-```
 ## 其他插件
 * `MoonLake` 核心 API 插件 :point_right:[GO](http://github.com/u2g/MoonLake "MoonLake Plugin")
 * `MoonLakeKitPvP` 职业战争插件 :point_right:[GO](http://github.com/u2g/MoonLakeKitPvP "MoonLake KitPvP Plugin")
