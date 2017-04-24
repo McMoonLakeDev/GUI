@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="MoonLakeGUI-Javadoc:jar">
-    <output-path>$USER_HOME$/Desktop/api/doc</output-path>
-    <root id="archive" name="MoonLakeGUI-Javadoc.jar">
-      <element id="dir-copy" path="$PROJECT_DIR$/doc" />
-    </root>
-  </artifact>
-</component>
